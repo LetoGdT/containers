@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/14 20:27:25 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/02/14 23:23:25 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,16 +226,32 @@ namespace ft {
 
 	template<typename T> class VectorIter {
 		public:
+			typedef std::random_access_iterator_tag iterator_category;
+			typedef typename ft::vector<T>::difference_type difference_type;
+			typedef typename ft::vector<T>::value_type value_type;
+			typedef typename ft::vector<T>::pointer pointer;
+			typedef typename ft::vector<T>::reference reference;
+
+			VectorIter():
+				_data(NULL) {};
 			VectorIter(typename ft::vector<T>::pointer data):
 				_data(data) {}
+			VectorIter<T> & operator=(VectorIter<T> & other) {
+				VectorIter<T>::_data = other._data;
+				return *this;
+			}
+
 			bool operator==(VectorIter<T> & other) {
 				return this->_data == other._data;
 			}
 			bool operator!=(VectorIter<T> & other) {
 				return !operator==(other);
 			}
-			typename ft::vector<T>::reference operator*() {
+			reference operator*() {
 				return *_data;
+			}
+			pointer operator->() {
+				return _data;
 			}
 			VectorIter<T> & operator++() {
 				this->_data++;
@@ -246,13 +262,59 @@ namespace ft {
 				this->_data++;
 				return iter;
 			}
+			VectorIter<T> & operator--() {
+				_data--;
+				return *this;
+			}
+			VectorIter<T> operator--(int) { 
+				VectorIter<T> iter(_data);
+				this->_data--;
+				return iter;
+			}
+			bool operator<(VectorIter<T>& other) {
+				return this->_data < other._data;
+			}
+			bool operator>(VectorIter<T>& other) {
+				return this->_data > other._data;
+			}
+			bool operator<=(VectorIter<T>& other) {
+				return this->_data <= other._data;
+			}
+			bool operator>=(VectorIter<T>& other) {
+				return this->_data >= other._data;
+			}
+			VectorIter<T>& operator+=(difference_type n) {
+				_data += n;
+				return *this;
+			}
+			VectorIter<T>& operator-=(difference_type n) {
+				_data -= n;
+				return *this;
+			}
+			reference operator[](difference_type n) {
+				return _data[n];
+			}
 		protected:
 			typename vector<T>::pointer _data;
 	};
+	template <typename T>
+		VectorIter<T> operator+(const VectorIter<T>& it, typename VectorIter<T>::difference_type n) {
+			VectorIter<T> iter(*it);
+			iter._data += n;
+			return iter;
+		}
+	template <typename T>
+		VectorIter<T> operator+(typename VectorIter<T>::difference_type n, const VectorIter<T>& it) {
+			VectorIter<T> iter(*it);
+			iter._data += n;
+			return iter;
+		}
 
 	template<typename T>
 	class ReverseVectorIter: public virtual VectorIter<T> {
 		public:
+			ReverseVectorIter():
+				VectorIter<T>::_data(NULL) {};
 			ReverseVectorIter(typename ft::vector<T>::pointer data):
 				VectorIter<T>::_data(data) {}
 			ReverseVectorIter<T> & operator++() {
@@ -269,6 +331,8 @@ namespace ft {
 	template<typename T>
 	class ConstVectorIter: public virtual VectorIter<T> {
 		public:
+			ConstVectorIter():
+				VectorIter<T>::_data(NULL) {};
 			ConstVectorIter(typename ft::vector<T>::pointer data):
 				VectorIter<T>(data) {}
 			typename ft::vector<T>::reference operator*() {
@@ -279,6 +343,8 @@ namespace ft {
 	template<typename T>
 	class ConstReverseVectorIter: public ConstVectorIter<T>, public ReverseVectorIter<T> {
 		public:
+			ConstReverseVectorIter():
+				VectorIter<T>::_data(NULL) {};
 			ConstReverseVectorIter(typename ft::vector<T>::pointer data):
 				ReverseVectorIter<T>(data) {}
 			typename ft::vector<T>::reference operator*() {
