@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/07 20:01:24 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/02/14 20:27:25 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,6 @@ namespace ft {
 			typedef ConstVectorIter<T> const_iterator;
 			typedef ReverseVectorIter<T> reverse_iterator;
 			typedef ConstReverseVectorIter<T> const_reverse_iterator;
-			friend class VectorIter<T>;
-			friend class ConstVectorIter<T>;
-			friend class ReverseVectorIter<T>;
-			friend class ConstReverseVectorIter<T>;
 
 			vector(): vector(Allocator()) {}
 			explicit vector(const Allocator& alloc) {
@@ -128,17 +124,17 @@ namespace ft {
 			}
 
 			allocator_type get_allocator() const {
-				return const_cast<allocator_type>(_alloc);
+				return const_cast<const allocator_type>(_alloc);
 			}
 
 			reference at(size_type pos) {
 				if (pos >= _size)
-					throw std::out_of_range("");
+					throw std::out_of_range("at: out of range");
 				return _data[pos];
 			}
 			const_reference at(size_type pos) const {
 				if (pos >= _size)
-					throw std::out_of_range("");
+					throw std::out_of_range("at: out of range");
 				return const_cast<const_reference>(_data[pos]);
 			}
 
@@ -161,14 +157,14 @@ namespace ft {
 				return const_cast<const_reference>(_data);
 			}
 
-			iterator begin() { return VectorIter<T>(*this, 0); }
-			iterator end() { return VectorIter<T>(*this, _size); }
-			const_iterator begin() const { return ConstVectorIter<T>(*this, 0); }
-			const_iterator end() const { return ConstVectorIter<T>(*this, _size); }
-			reverse_iterator rbegin() { return ReverseVectorIter<T>(*this, 0); }
-			reverse_iterator rend() { return ConstReverseVectorIter<T>(*this, _size); }
-			const_reverse_iterator rbegin() const { return ConstReverseVectorIter<T>(*this, 0); }
-			const_reverse_iterator rend() const { return ConstReverseVectorIter<T>(*this, _size); }
+			iterator begin() { return VectorIter<T>(_data); }
+			iterator end() { return VectorIter<T>(&_data[_size]); }
+			const_iterator begin() const { return ConstVectorIter<T>(_data); }
+			const_iterator end() const { return ConstVectorIter<T>(&_data[_size]); }
+			reverse_iterator rbegin() { return ReverseVectorIter<T>(&_data[_size - 1]); }
+			reverse_iterator rend() { return ConstReverseVectorIter<T>(&_data[-1]); }
+			const_reverse_iterator rbegin() const { return ConstReverseVectorIter<T>(&_data[_size - 1]); }
+			const_reverse_iterator rend() const { return ConstReverseVectorIter<T>(&_data[-1]); }
 
 			bool empty() const {
 				return _size == 0;
@@ -184,8 +180,15 @@ namespace ft {
 				return _capacity;
 			}
 
-			void clear();
-			iterator insert(iterator pos, const T& value);
+			void clear() {
+				_alloc.deallocate(_data, _capacity);
+				_capacity = 10;
+				_size = 0;
+				_data = _alloc.allocate(_capacity);
+			}
+			iterator insert(iterator pos, const T& value) {
+
+			}
 			template<class InputIt>
 				void insert(iterator pos,
 							InputIt first,
@@ -223,47 +226,42 @@ namespace ft {
 
 	template<typename T> class VectorIter {
 		public:
-			VectorIter(typename ft::vector<T> & vect,
-					   typename ft::vector<T>::size_type pos):
-				_vect(vect), _pos(pos) {}
+			VectorIter(typename ft::vector<T>::pointer data):
+				_data(data) {}
 			bool operator==(VectorIter<T> & other) {
-				return this->_vect == other._vect && this->pos == other._pos;
+				return this->_data == other._data;
 			}
 			bool operator!=(VectorIter<T> & other) {
 				return !operator==(other);
 			}
 			typename ft::vector<T>::reference operator*() {
-				if (this->_pos < 0 || this->_pos >= this->_vect._size)
-					throw std::out_of_range("Accesed element out of range of vector");
-				return this->_vect.data[this->_pos];
+				return *_data;
 			}
 			VectorIter<T> & operator++() {
-				this->_pos++;
+				this->_data++;
 				return *this;
 			}
 			VectorIter<T> operator++(int) { 
-				VectorIter<T> iter(this->_vect, this->_pos);
-				this->_pos++;
+				VectorIter<T> iter(_data);
+				this->_data++;
 				return iter;
 			}
 		protected:
-			typename ft::vector<T> & _vect;
-			typename vector<T>::size_type _pos;
+			typename vector<T>::pointer _data;
 	};
 
 	template<typename T>
 	class ReverseVectorIter: public virtual VectorIter<T> {
 		public:
-			ReverseVectorIter(typename ft::vector<T> & vect,
-					   typename ft::vector<T>::size_type pos):
-				VectorIter<T>::_vect(vect), VectorIter<T>::_pos(VectorIter<T>::_size - pos) {}
+			ReverseVectorIter(typename ft::vector<T>::pointer data):
+				VectorIter<T>::_data(data) {}
 			ReverseVectorIter<T> & operator++() {
-				this->_pos--;
+				this->_data--;
 				return *this;
 			}
 			ReverseVectorIter<T> operator++(int) { 
-				VectorIter<T> iter(this->_vect, this->_pos);
-				this->_pos--;
+				ReverseVectorIter<T> iter(this->_data);
+				this->_data--;
 				return iter;
 			}
 	};
@@ -271,9 +269,8 @@ namespace ft {
 	template<typename T>
 	class ConstVectorIter: public virtual VectorIter<T> {
 		public:
-			ConstVectorIter(typename ft::vector<T> & vect,
-					   typename ft::vector<T>::size_type pos):
-				VectorIter<T>(vect, pos) {}
+			ConstVectorIter(typename ft::vector<T>::pointer data):
+				VectorIter<T>(data) {}
 			typename ft::vector<T>::reference operator*() {
 				return const_cast<T>(VectorIter<T>::operator*());
 			}
@@ -282,9 +279,8 @@ namespace ft {
 	template<typename T>
 	class ConstReverseVectorIter: public ConstVectorIter<T>, public ReverseVectorIter<T> {
 		public:
-			ConstReverseVectorIter(typename ft::vector<T> & vect,
-					   typename ft::vector<T>::size_type pos):
-				ReverseVectorIter<T>(vect, pos) {}
+			ConstReverseVectorIter(typename ft::vector<T>::pointer data):
+				ReverseVectorIter<T>(data) {}
 			typename ft::vector<T>::reference operator*() {
 				return ConstVectorIter<T>::operator*();
 			}
