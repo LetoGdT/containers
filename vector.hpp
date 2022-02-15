@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/14 23:23:25 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/02/15 20:15:21 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # include <memory>
 # include <iterator>
 # include <exception>
+# include <cstring>
+# define _MEMORY_ALLOWANCE 2
 
 namespace ft {
 	template<typename T>
@@ -123,9 +125,7 @@ namespace ft {
 					_data[i] = *it;
 			}
 
-			allocator_type get_allocator() const {
-				return const_cast<const allocator_type>(_alloc);
-			}
+			allocator_type get_allocator() const { return const_cast<const allocator_type>(_alloc); }
 
 			reference at(size_type pos) {
 				if (pos >= _size)
@@ -138,24 +138,12 @@ namespace ft {
 				return const_cast<const_reference>(_data[pos]);
 			}
 
-			reference front() {
-				return _data[0];
-			}
-			const_reference front() const {
-				return const_cast<const_reference>(_data[0]);
-			}
-			reference back() {
-				return _data[_size - 1];
-			}
-			const_reference back() const {
-				return const_cast<const_reference>(_data[_size - 1]);
-			}
-			T* data() {
-				return _data;
-			}
-			const T* data() const {
-				return const_cast<const_reference>(_data);
-			}
+			reference front() { return _data[0]; }
+			const_reference front() const { return const_cast<const_reference>(_data[0]); }
+			reference back() { return _data[_size - 1]; }
+			const_reference back() const { return const_cast<const_reference>(_data[_size - 1]); }
+			T* data() { return _data; }
+			const T* data() const { return const_cast<const_reference>(_data); }
 
 			iterator begin() { return VectorIter<T>(_data); }
 			iterator end() { return VectorIter<T>(&_data[_size]); }
@@ -166,16 +154,19 @@ namespace ft {
 			const_reverse_iterator rbegin() const { return ConstReverseVectorIter<T>(&_data[_size - 1]); }
 			const_reverse_iterator rend() const { return ConstReverseVectorIter<T>(&_data[-1]); }
 
-			bool empty() const {
-				return _size == 0;
+			bool empty() const { return _size == 0; }
+			size_type size() const { return _size; }
+			size_type max_size() const { return std::numeric_limits<size_type>::max(); }
+			void reserve(size_type new_cap) {
+				if (new_cap <= _capacity)
+					return ;
+				pointer tmp;
+				tmp = _alloc.allocate(new_cap);
+				memmove(tmp, const_cast<const_pointer>(_data), _size * sizeof(value_type));
+				_alloc.deallocate(_data, _capacity);
+				_capacity = new_cap;
+				_data = tmp;
 			}
-			size_type size() const {
-				return _size;
-			}
-			size_type max_size() const {
-				return std::numeric_limits<size_type>::max();
-			}
-			void reserve( size_type new_cap );
 			size_type capacity() const {
 				return _capacity;
 			}
@@ -187,12 +178,25 @@ namespace ft {
 				_data = _alloc.allocate(_capacity);
 			}
 			iterator insert(iterator pos, const T& value) {
-
+				iterator it = _makeEmptySpace(pos, 1);
+				*it = value;
+			}
+			void insert(iterator pos, size_type count, const_reference value) {
+				iterator it = _makeEmptySpace(pos, count);
+				for (size_type i = 0 ; i < count ; i++, it++)
+					*it = value;
 			}
 			template<class InputIt>
 				void insert(iterator pos,
 							InputIt first,
-							InputIt last);
+							InputIt last) {
+					size_type count;
+					for (InputIt in = first, count = 1 ; in != last ; in ++)
+						count++;
+					iterator it = _makeEmptySpace(pos, count);
+					for (InputIt in = first ; in != last ; in++, it++)
+						*it = *in;
+				}
 			iterator erase(iterator pos);
 			iterator erase(iterator first, iterator last);
 			void push_back(const T& value);
@@ -222,6 +226,17 @@ namespace ft {
 			size_type _size;
 			size_type _capacity;
 			Allocator& _alloc;
+
+			iterator _makeEmptySpace(iterator pos, size_type count) {
+				size_type n;
+				for (iterator it = begin(), n = 0 ; it != end() && it != pos; it++)
+					n++;
+				if (_capacity >= _size + count)
+					reserve(_capacity * _MEMORY_ALLOWANCE);
+				if (n < _size)
+					memmove(_data + n + count, _data + n, n * sizeof(value_type));
+				return iterator(_data + n);
+			}
 	};
 
 	template<typename T> class VectorIter {
