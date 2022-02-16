@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/15 20:15:21 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/02/16 17:16:20 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,9 +197,21 @@ namespace ft {
 					for (InputIt in = first ; in != last ; in++, it++)
 						*it = *in;
 				}
-			iterator erase(iterator pos);
+			iterator erase(iterator pos) {
+				size_type n;
+				for (iterator it = begin(), n = 0 ; it != pos && it != end() ; it++)
+					n++;
+				if (n >= _size)
+					return pos;
+				memmove(_data + n, _data + n + 1, (_size - n - 1) * sizeof(value_type));
+				_size--;
+				return iterator(_data + n);
+			}
 			iterator erase(iterator first, iterator last);
-			void push_back(const T& value);
+			void push_back(const T& value) {
+				iterator it = iterator(_data + _size);
+				it = _makeEmptySpace(it, 1);
+			}
 			void pop_back();
 			void resize(size_type count);
 			void resize(size_type count, T value = T());
@@ -231,7 +243,7 @@ namespace ft {
 				size_type n;
 				for (iterator it = begin(), n = 0 ; it != end() && it != pos; it++)
 					n++;
-				if (_capacity >= _size + count)
+				if (_capacity <= _size + count)
 					reserve(_capacity * _MEMORY_ALLOWANCE);
 				if (n < _size)
 					memmove(_data + n + count, _data + n, n * sizeof(value_type));
