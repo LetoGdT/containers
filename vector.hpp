@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/23 20:12:12 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/01 23:23:13 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,13 @@ namespace ft {
 				return const_cast<const_reference>(_data[pos]);
 			}
 
+			reference operator[](size_type n) {
+				return _data[n];
+			}
+			const_reference operator[](size_type n) const {
+				return _data[n];
+			}
+
 			reference front() { return _data[0]; }
 			const_reference front() const { return const_cast<const_reference>(_data[0]); }
 			reference back() { return _data[_size - 1]; }
@@ -192,6 +199,7 @@ namespace ft {
 			iterator insert(iterator pos, const T& value) {
 				iterator it = _makeEmptySpace(pos, 1);
 				*it = value;
+				return it;
 			}
 			void insert(iterator pos, size_type count, const_reference value) {
 				iterator it = _makeEmptySpace(pos, count);
@@ -202,9 +210,7 @@ namespace ft {
 				void insert(iterator pos,
 							InputIt first,
 							InputIt last) {
-					size_type count;
-					for (InputIt in = first, count = 1 ; in != last ; in ++)
-						count++;
+					size_type count = last - first;
 					iterator it = _makeEmptySpace(pos, count);
 					for (InputIt in = first ; in != last ; in++, it++)
 						*it = *in;
@@ -299,7 +305,7 @@ namespace ft {
 			pointer _data;
 			size_type _size;
 			size_type _capacity;
-			Allocator& _alloc;
+			Allocator _alloc;
 
 			//makes empty space at the iterator pos, and makes count free spaces.
 			//manages the enlargement of the allocated space, as well as deallocation
@@ -308,9 +314,7 @@ namespace ft {
 			//
 			//returns an iterator to the first free slot created
 			iterator _makeEmptySpace(iterator pos, size_type count) {
-				size_type n;
-				for (iterator it = begin(), n = 0 ; it != end() && it != pos; it++)
-					n++;
+				size_type n = pos - begin();
 				if (_capacity <= _size + count)
 					reserve(_capacity * _MEMORY_ALLOWANCE);
 				if (n < _size)

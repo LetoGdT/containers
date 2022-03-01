@@ -6,26 +6,47 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/20 19:56:58 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/01 22:51:38 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vector>
+#include "vector.hpp"
+#include "iterator.hpp"
+#include "const_iterator.hpp"
+#include "reverse_iterator.hpp"
+#include "const_reverse_iterator.hpp"
 #include <iostream>
 
 int main() {
-	std::allocator<std::string> alloc;
-	std::string *data = alloc.allocate(10);
-	for (int i = 0 ; i < 10 ; i++)
-		alloc.construct(data + i, "allo" + std::to_string(i));
+	ft::vector<int> v;
 
-	std::string *tmp = alloc.allocate(20);
-
-	memmove(tmp, data, 10 * sizeof(std::string));
-	alloc.deallocate(data, 10);
-	for (int i = 0 ; i < 10 ; i++) {
-		std::cout << tmp[i] << std::endl;
-		alloc.destroy(tmp + i);
-	}
-	alloc.deallocate(tmp, 20);
+	v.insert(v.begin(), 12);
+	v.insert(v.begin(), 11);
+	ft::vector<int>::iterator it = v.begin();
+	ft::vector<int> w;
+	it++;
+	w.insert(w.begin(), v.begin(), it);
+	for (ft::vector<int>::iterator i = w.begin() ; i !=w.end() ; i++)
+		std::cout << *i << std::endl;
+	return 0;
 }
+
+/*
+#include <vector>
+#include <iostream>
+
+
+int main() {
+	std::vector<int> v;
+
+	v.insert(v.begin(), 12);
+	v.insert(v.begin(), 11);
+	std::vector<int>::iterator it = v.begin();
+	std::vector<int> w;
+	it++;
+	w.insert(w.begin(), v.begin(), it);
+	for (std::vector<int>::iterator i = w.begin() ; i !=w.end() ; i++)
+		std::cout << *i << std::endl;
+	return 0;
+}
+*/
