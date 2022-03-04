@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 02:53:35 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/03/04 03:16:39 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <exception>
 # include <limits>
 # include <cstring>
-# include <iostream>
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
 
@@ -133,7 +132,7 @@ namespace ft {
 						_alloc.construct(_data + i, *it);
 				}
 
-			allocator_type get_allocator() const { return const_cast<const allocator_type>(_alloc); }
+			allocator_type get_allocator() const { return _alloc; }
 	//element access
 			reference at(size_type pos) {
 				if (pos >= _size)
@@ -143,7 +142,7 @@ namespace ft {
 			const_reference at(size_type pos) const {
 				if (pos >= _size)
 					throw std::out_of_range("at: out of range");
-				return const_cast<const_reference>(_data[pos]);
+				return _data[pos];
 			}
 
 			reference operator[](size_type n) {
@@ -154,11 +153,11 @@ namespace ft {
 			}
 
 			reference front() { return _data[0]; }
-			const_reference front() const { return const_cast<const_reference>(_data[0]); }
+			const_reference front() const { return _data[0]; }
 			reference back() { return _data[_size - 1]; }
-			const_reference back() const { return const_cast<const_reference>(_data[_size - 1]); }
-			T* data() { return _data; }
-			const T* data() const { return const_cast<const_reference>(_data); }
+			const_reference back() const { return _data[_size - 1]; }
+			pointer data() { return _data; }
+			const_pointer data() const { return _data; }
 
 	//iterators
 			iterator begin() { return VectorIter<T>(_data); }
@@ -177,9 +176,8 @@ namespace ft {
 			void reserve(size_type new_cap) {
 				if (new_cap <= _capacity)
 					return ;
-				pointer tmp;
-				tmp = _alloc.allocate(new_cap);
-				memmove(tmp, const_cast<const_pointer>(_data), _size * sizeof(value_type));
+				pointer tmp = _alloc.allocate(new_cap);
+				memmove(tmp, _data, _size * sizeof(value_type));
 				_alloc.deallocate(_data, _capacity);
 				_capacity = new_cap;
 				_data = tmp;
@@ -200,9 +198,6 @@ namespace ft {
 			iterator insert(iterator pos, const T& value) {
 				iterator it = _makeEmptySpace(pos, 1);
 				*it = value;
-				std::cout << "pouet " << value << std::endl;
-				for (size_type i = 0 ; i < _size ; i++)
-					std::cout << "ici" << _data[i] << std::endl;
 				return it;
 			}
 			void insert(iterator pos, size_type count, const_reference value) {
@@ -322,7 +317,7 @@ namespace ft {
 				if (_capacity <= _size + count)
 					reserve(_capacity * _MEMORY_ALLOWANCE);
 				if (n < _size)
-					memmove(_data + n + count, _data + n, n * sizeof(value_type));
+					memmove(_data + n + count, _data + n, (_size - n) * sizeof(value_type));
 				_size += count;
 				return iterator(_data + n);
 			}
