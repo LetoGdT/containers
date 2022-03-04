@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:49:50 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/02/20 18:24:40 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:57:50 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define ITERATORTRAITS_HPP
 # include <iterator>
 
-namespace ft {
+namespace ft{
 	template <class Iter>
 		struct iterator_traits {
 			typedef typename Iter::value_type value_type;
