@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 21:48:42 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/01 23:14:07 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 02:42:48 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ namespace ft {
 				typedef typename ft::vector<T>::reference reference;
 				typedef std::random_access_iterator_tag iterator_category;
 
-				typedef iterator_traits<ConstReverseVectorIter<T>> iterator_traits;
-
 				ConstReverseVectorIter(): _data(NULL) {};
 				ConstReverseVectorIter(pointer data): _data(data) {}
 				ConstReverseVectorIter(const ConstReverseVectorIter<T> & other): _data(other.data) {}
@@ -41,16 +39,28 @@ namespace ft {
 				}
 				~ConstReverseVectorIter<T>() {}
 
-				friend bool operator==(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend bool operator!=(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend bool operator<(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend bool operator>(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend bool operator<=(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend bool operator>=(const ConstReverseVectorIter<T> & lhs, ConstReverseVectorIter<T> & rhs);
-				friend ConstReverseVectorIter<T> operator+(const ConstReverseVectorIter<T>& it, difference_type n);
-				friend ConstReverseVectorIter<T> operator+(difference_type n, const ConstReverseVectorIter<T>& it);
-				friend ConstReverseVectorIter<T> operator-(const ConstReverseVectorIter<T>& it, difference_type n);
-				friend difference_type operator-(const ConstReverseVectorIter<T>& lhs, const ConstReverseVectorIter<T>& rhs);
+			friend bool operator==(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) {return lhs._data == rhs._data; }
+			friend bool operator!=(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return !(lhs==rhs); }
+			friend bool operator<(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return lhs._data > rhs._data; }
+			friend bool operator>(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return lhs._data < rhs._data; }
+			friend bool operator<=(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return lhs._data >= rhs._data; }
+			friend bool operator>=(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return lhs._data <= rhs._data; }
+			friend ConstReverseVectorIter operator+(const ConstReverseVectorIter & it, difference_type n) {
+				ConstReverseVectorIter<T> iter(*it);
+				iter._data -= n;
+				return iter;
+			}
+			friend ConstReverseVectorIter operator+(difference_type n, const ConstReverseVectorIter & it) {
+				ConstReverseVectorIter<T> iter(*it);
+				iter._data -= n;
+				return iter;
+			}
+			friend ConstReverseVectorIter operator-(const ConstReverseVectorIter & it, difference_type n) {
+				ConstReverseVectorIter<T> iter(*it);
+				iter._data += n;
+				return iter;
+			}
+			friend difference_type operator-(const ConstReverseVectorIter & lhs, const ConstReverseVectorIter & rhs) { return rhs._data - lhs._data; }
 
 				const reference operator*() const { return *_data; }
 				const pointer operator->() const { return _data; }

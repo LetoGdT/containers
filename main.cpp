@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/01 22:51:38 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 02:44:29 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,7 @@ int main() {
 
 	v.insert(v.begin(), 12);
 	v.insert(v.begin(), 11);
-	ft::vector<int>::iterator it = v.begin();
-	ft::vector<int> w;
-	it++;
-	w.insert(w.begin(), v.begin(), it);
-	for (ft::vector<int>::iterator i = w.begin() ; i !=w.end() ; i++)
+	for (ft::vector<int>::iterator i = v.begin() ; i !=v.end() ; i++)
 		std::cout << *i << std::endl;
 	return 0;
 }

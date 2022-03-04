@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/01 23:23:13 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 02:53:35 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 # include <memory>
 # include <iterator>
 # include <exception>
+# include <limits>
 # include <cstring>
-# include "IteratorTraits.hpp"
+# include <iostream>
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
 
@@ -199,6 +200,9 @@ namespace ft {
 			iterator insert(iterator pos, const T& value) {
 				iterator it = _makeEmptySpace(pos, 1);
 				*it = value;
+				std::cout << "pouet " << value << std::endl;
+				for (size_type i = 0 ; i < _size ; i++)
+					std::cout << "ici" << _data[i] << std::endl;
 				return it;
 			}
 			void insert(iterator pos, size_type count, const_reference value) {
@@ -285,20 +289,20 @@ namespace ft {
 				other._capacity = tmp_capacity;
 				other._alloc = tmp_alloc;
 			}
-			friend bool operator==(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator==(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
-			friend bool operator!=(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator!=(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
-			friend bool operator<(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator<(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
-			friend bool operator<=(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator<=(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
-			friend bool operator>(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator>(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
-			friend bool operator>=(const ft::vector<T,Allocator>& lhs,
+			template <typename U> friend bool operator>=(const ft::vector<T,Allocator>& lhs,
 					const ft::vector<T,Allocator>& rhs);
 
-			friend void swap(ft::vector<T, Allocator>& lhs,
+			template <typename U> friend void swap(ft::vector<T, Allocator>& lhs,
 							 ft::vector<T, Allocator>& rhs);
 
 		private:
@@ -319,6 +323,7 @@ namespace ft {
 					reserve(_capacity * _MEMORY_ALLOWANCE);
 				if (n < _size)
 					memmove(_data + n + count, _data + n, n * sizeof(value_type));
+				_size += count;
 				return iterator(_data + n);
 			}
 	};
@@ -360,4 +365,9 @@ namespace ft {
 							 ft::vector<T, Allocator>& rhs);
 }
 
+# include "IteratorTraits.hpp"
+# include "iterator.hpp"
+# include "const_iterator.hpp"
+# include "reverse_iterator.hpp"
+# include "const_iterator.hpp"
 #endif
