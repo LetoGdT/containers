@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 03:16:39 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/03/04 18:21:42 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ namespace ft {
 					_alloc.construct(_data + i, other._data[i]);
 			}
 
-			void assign( size_type count, const T& value ) {
+			void assign(size_type count, const T& value) {
 				for (size_type i = 0 ; i < _size ; i++)
 					_alloc.destroy(_data + i);
 				_alloc.deallocate(_data, _capacity);
