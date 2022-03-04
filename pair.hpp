@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 13:02:20 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 16:25:48 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:39:30 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace ft{
 			second = y;
 		}
 		template<
-			class U1, 
+			class U1,
 			class U2>
 		pair( const pair<U1, U2>& p ) {
 			first = p.first;

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:21:31 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 16:41:50 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:38:43 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ namespace ft{
 			first2++;
 		}
 		return true;
-	}  
+	}
 	template<
-		class InputIt1, 
-		class InputIt2, 
+		class InputIt1,
+		class InputIt2,
 		class BinaryPredicate>
 	bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2, BinaryPredicate p) {
 		while (first1 != last1) {
