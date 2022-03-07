@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 16:00:15 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/07 17:42:37 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 #include <iostream>
 
 int main() {
-	auto p = ft::make_pair(4, 12.1);
-	std::cout << p.first << std::endl;
-	std::cout << p.second << std::endl;
+	ft::vector<int> v;
 	return 0;
 }
 

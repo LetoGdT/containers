@@ -6,14 +6,14 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 02:43:11 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/03/07 16:51:56 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
-# include "vector.hpp"
-# include "IteratorTraits.hpp"
+# include "../vector.hpp"
+# include "../IteratorTraits.hpp"
 
 /****************************************
  * Les itérateurs contiennent juste un pointeur sur la _data du vecteur, 

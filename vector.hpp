@@ -6,14 +6,13 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 16:29:11 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/07 18:00:35 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 # include <memory>
-# include <iterator>
 # include <exception>
 # include <limits>
 # include <cstring>
@@ -285,21 +284,22 @@ namespace ft {
 				other._capacity = tmp_capacity;
 				other._alloc = tmp_alloc;
 			}
-			template <typename U> friend bool operator==(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
-			template <typename U> friend bool operator!=(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
-			template <typename U> friend bool operator<(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
-			template <typename U> friend bool operator<=(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
-			template <typename U> friend bool operator>(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
-			template <typename U> friend bool operator>=(const ft::vector<T,Allocator>& lhs,
-					const ft::vector<T,Allocator>& rhs);
+			friend bool operator==(vector const & lhs,
+									vector const & rhs) {
+				if (lhs._size != rhs._size)
+					return false;
+				for (iterator i = lhs.begin(), j = rhs.begin() ; i != lhs.end() ; i++, j++)
+					if (*i != *j)
+						return false;
+				return true;
+			}
+			friend bool operator!=(vector const & lhs, vector const & rhs) { return !(lhs == rhs); }
+			friend bool operator<(vector const & lhs, vector const & rhs);
+			friend bool operator<=(vector const & lhs, vector const & rhs);
+			friend bool operator>(vector const & lhs, vector const & rhs);
+			friend bool operator>=(vector const & lhs, vector const & rhs);
 
-			template <typename U> friend void swap(ft::vector<T, Allocator>& lhs,
-							 ft::vector<T, Allocator>& rhs);
+			friend void swap(vector const & lhs, vector const & rhs);
 
 		private:
 			pointer _data;
@@ -323,47 +323,11 @@ namespace ft {
 				return iterator(_data + n);
 			}
 	};
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator==(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator!=(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator<(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator<=(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator>(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			bool operator>=(const ft::vector<T,Allocator>& lhs,
-			 const ft::vector<T,Allocator>& rhs);
-
-	template
-		<typename T,
-		class Allocator = std::allocator<T>>
-			void swap(ft::vector<T, Allocator>& lhs,
-							 ft::vector<T, Allocator>& rhs);
 }
 
 # include "IteratorTraits.hpp"
-# include "iterator.hpp"
-# include "const_iterator.hpp"
-# include "reverse_iterator.hpp"
-# include "const_iterator.hpp"
+# include "vector_it/iterator.hpp"
+# include "vector_it/reverse_iterator.hpp"
+# include "vector_it/const_reverse_iterator.hpp"
+# include "vector_it/const_iterator.hpp"
 #endif

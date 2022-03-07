@@ -6,14 +6,14 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 21:48:42 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 02:42:48 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/03/07 16:53:29 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONST_REVERSE_ITERATOR_HPP
 # define CONST_REVERSE_ITERATOR_HPP
-# include "vector.hpp"
-# include "IteratorTraits.hpp"
+# include "../vector.hpp"
+# include "../IteratorTraits.hpp"
 
 /****************************************
  * Les itérateurs contiennent juste un pointeur sur la _data du vecteur, 
