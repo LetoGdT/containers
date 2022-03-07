@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 17:57:30 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/07 18:02:22 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ namespace ft {
 		//element access
 			reference at(const key_type& key);
 			const_reference at(const key_type& key) const;
-			reference operator[](const key_type& key);	
-			const_reference operator[](const key_type& key) const;	
+			reference operator[](const key_type& key);
+			const_reference operator[](const key_type& key) const;
 
 		//iterators
 			iterator begin() { return MapIter<T>(_data); }
