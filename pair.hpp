@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 13:02:20 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 17:39:30 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/07 15:59:49 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,17 @@ namespace ft{
 			first = T1();
 			second = T2();
 		}
-		pair( const T1& x, const T2& y ) {
-			first = x;
-			second = y;
-		}
+		pair( const T1& x, const T2& y ): first(x), second(y) {}
 		template<
 			class U1,
 			class U2>
-		pair( const pair<U1, U2>& p ) {
-			first = p.first;
-			second = p.second;
-		}
+		pair( const pair<U1, U2>& p ): first(p.first), second(p.second) {}
 		pair& operator=(pair const & other) {
 			first = other.first;
 			second = other.second;
 		}
-		~pair();
+		~pair() {}
 
-		friend pair make_pair(T1 t, T2 u);
 		friend bool operator==(pair const & lhs, pair const & rhs) { return lhs.first == rhs.first && lhs.second == rhs.second; }
 		friend bool operator!=(pair const & lhs, pair const & rhs) { return !(lhs == rhs); }
 		friend bool operator<(pair const & lhs, pair const & rhs) { return lhs.first < rhs.first && lhs.second < rhs.second; }
@@ -54,6 +47,12 @@ namespace ft{
 		friend bool operator<=(pair const & lhs, pair const & rhs) { return lhs.first <= rhs.first && lhs.second <= rhs.second; }
 		friend bool operator>=(pair const & lhs, pair const & rhs) { return lhs.first >= rhs.first && lhs.second >= rhs.second; }
 	};
+	template <
+		class T1,
+		class T2>
+	pair<T1, T2> make_pair(T1 t, T2 u) {
+		return pair<T1, T2>(t, u);
+	}
 }
 
 #endif
