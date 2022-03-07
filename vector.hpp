@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/04 18:21:42 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/07 16:29:11 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <exception>
 # include <limits>
 # include <cstring>
+# include "is_integral.hpp"
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
 
@@ -68,7 +69,7 @@ namespace ft {
 			}
 
 			template<class InputIt>
-				vector(InputIt first,
+				vector(typename std::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 						InputIt last,
 						const Allocator& alloc = Allocator()) {
 				_alloc = alloc;
@@ -207,7 +208,7 @@ namespace ft {
 			}
 			template<class InputIt>
 				void insert(iterator pos,
-							InputIt first,
+							typename std::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type first,
 							InputIt last) {
 					size_type count = last - first;
 					iterator it = _makeEmptySpace(pos, count);
