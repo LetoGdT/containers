@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 18:00:35 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 18:58:57 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <limits>
 # include <cstring>
 # include "is_integral.hpp"
+# include "lexicographical_compare.hpp"
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
 
@@ -243,6 +244,7 @@ namespace ft {
 			void push_back(const T& value) {
 				iterator it = iterator(_data + _size);
 				it = _makeEmptySpace(it, 1);
+				*it = value;
 			}
 			void pop_back() {
 				if (_size == 0)
@@ -284,22 +286,58 @@ namespace ft {
 				other._capacity = tmp_capacity;
 				other._alloc = tmp_alloc;
 			}
+
 			friend bool operator==(vector const & lhs,
 									vector const & rhs) {
-				if (lhs._size != rhs._size)
-					return false;
-				for (iterator i = lhs.begin(), j = rhs.begin() ; i != lhs.end() ; i++, j++)
-					if (*i != *j)
-						return false;
-				return true;
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_equ);
 			}
-			friend bool operator!=(vector const & lhs, vector const & rhs) { return !(lhs == rhs); }
-			friend bool operator<(vector const & lhs, vector const & rhs);
-			friend bool operator<=(vector const & lhs, vector const & rhs);
-			friend bool operator>(vector const & lhs, vector const & rhs);
-			friend bool operator>=(vector const & lhs, vector const & rhs);
+			friend bool operator!=(vector const & lhs, vector const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_diff);
+			}
+			friend bool operator<(vector const & lhs, vector const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_less);
+			}
+			friend bool operator<=(vector const & lhs, vector const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_less_equ);
+			}
+			friend bool operator>(vector const & lhs, vector const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_more);
+			}
+			friend bool operator>=(vector const & lhs, vector const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+												rhs.begin(), rhs.end(),
+												_value_operator_more_equ);
+			}
 
-			friend void swap(vector const & lhs, vector const & rhs);
+			friend void swap(vector const & lhs, vector const & rhs) {
+				//Saving lhs’s attributes
+				pointer tmp_data = lhs->_data;
+				size_type tmp_size = lhs->_size;
+				size_type tmp_capacity = lhs->_capacity;
+				Allocator& tmp_alloc = lhs->_alloc;
+
+				//Copying rhs’s attributes to lhs
+				lhs->_data = rhs._data;
+				lhs->_size = rhs._size;
+				lhs->_capacity = rhs._capacity;
+				lhs->_alloc = rhs._alloc;
+
+				//Setting rhs’s attributes to the saved values of this
+				rhs._data = tmp_data;
+				rhs._size = tmp_size;
+				rhs._capacity = tmp_capacity;
+				rhs._alloc = tmp_alloc;
+			}
 
 		private:
 			pointer _data;
@@ -322,6 +360,12 @@ namespace ft {
 				_size += count;
 				return iterator(_data + n);
 			}
+			inline static bool _value_operator_equ(value_type a, value_type b) { return a == b; }
+			inline static bool _value_operator_diff(value_type a, value_type b) { return a != b; }
+			inline static bool _value_operator_less(value_type a, value_type b) { return a < b; }
+			inline static bool _value_operator_less_equ(value_type a, value_type b) { return a <= b; }
+			inline static bool _value_operator_more(value_type a, value_type b) { return a > b; }
+			inline static bool _value_operator_more_equ(value_type a, value_type b) { return a >= b; }
 	};
 }
 

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 20:23:56 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 16:52:48 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 18:57:42 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ namespace ft{
 			ConstVectorIter(): _data(NULL) {};
 			ConstVectorIter(pointer data): _data(data) {}
 			ConstVectorIter(const ConstVectorIter<T> & other): _data(other._data) {}
-			ConstVectorIter<T> & operator=(ConstVectorIter<T> & other) {
+			ConstVectorIter<T> & operator=(ConstVectorIter<T> const & other) {
 				ConstVectorIter<T>::_data = other._data;
 				return *this;
 			}
@@ -62,7 +62,7 @@ namespace ft{
 			}
 			friend difference_type operator-(const ConstVectorIter & lhs, const ConstVectorIter & rhs) { return lhs._data - rhs._data; }
 
-			const reference operator*() const { return const_cast<const value_type>(*_data); }
+			const reference operator*() const { return *_data; }
 			const pointer operator->() const { return _data; }
 			const reference operator[](difference_type n) const {
 				return _data[n];

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 16:51:56 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 18:57:21 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ namespace ft{
 			VectorIter(): _data(NULL) {};
 			VectorIter(pointer data): _data(data) {}
 			VectorIter(const VectorIter<T> & other): _data(other._data) {}
-			VectorIter<T> & operator=(VectorIter<T> & other) {
+			VectorIter<T> & operator=(VectorIter<T> const & other) {
 				VectorIter<T>::_data = other._data;
 				return *this;
 			}
