@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/08 19:09:17 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 20:40:28 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,27 @@
 
 int main() {
 	ft::vector<int> v;
-	ft::vector<int> w;
 
-	for (int i = 0 ; i < 5 ; i++)
+	for (int i = 0 ; i < 20 ; i++)
 		v.push_back(i);
-	for (int i = 0 ; i < 10 ; i++)
-		w.push_back(i);
+
+	ft::vector<int> w;
+	for (auto i = 0 ; i < 5 ; i++)
+		w.push_back(i + 40);
 
 	for (auto it = v.begin() ; it != v.end() ; it++)
 		std::cout << *it << std::endl;
+
+	v.assign(w.begin(), w.end());
+
 	std::cout << std::endl;
-	for (auto it = w.begin() ; it != w.end() ; it++)
+	for (auto it = v.begin() ; it != v.end() ; it++)
 		std::cout << *it << std::endl;
+
 	std::cout << std::endl;
-	std::cout << ((v == w)?"true":"false") << std::endl;
-	v.push_back(12);
-	std::cout << ((v > w)?"true":"false") << std::endl;
+	std::cout << v.capacity() << std::endl;
+	std::cout << v.size() << std::endl;
+
 	return 0;
 }
 

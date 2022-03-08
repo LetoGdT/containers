@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 20:23:56 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 16:53:19 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 20:27:11 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft {
 
 			ReverseVectorIter(): _data(NULL) {};
 			ReverseVectorIter(pointer data): _data(data) {}
-			ReverseVectorIter(const ReverseVectorIter<T> & other): _data(other.data) {}
+			ReverseVectorIter(const ReverseVectorIter<T> & other): _data(other._data) {}
 			ReverseVectorIter<T> & operator=(const ReverseVectorIter<T> & other) {
 				_data = other._data;
 				return *this;
@@ -78,7 +78,7 @@ namespace ft {
 				return *this;
 			}
 			ReverseVectorIter<T> operator++(int) { 
-				VectorIter<T> iter(_data);
+				ReverseVectorIter<T> iter(_data);
 				this->_data--;
 				return iter;
 			}

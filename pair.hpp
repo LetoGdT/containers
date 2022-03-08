@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 13:02:20 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 15:59:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 19:19:04 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ namespace ft{
 		pair& operator=(pair const & other) {
 			first = other.first;
 			second = other.second;
+			return *this;
 		}
 		~pair() {}
 

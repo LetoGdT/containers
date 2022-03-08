@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/08 18:58:57 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/08 20:37:49 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "lexicographical_compare.hpp"
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
+# include <iostream>
 
 namespace ft {
 	template<typename T>
@@ -83,7 +84,7 @@ namespace ft {
 			}
 
 			vector(const vector& other) {
-				this->_alloc = other.alloc;
+				this->_alloc = other._alloc;
 				this->_capacity = other._capacity;
 				this->_size = other._size;
 				this->_data = _alloc.allocate(_capacity);
@@ -100,11 +101,13 @@ namespace ft {
 				for (size_type i = 0 ; i < _size ; i++)
 					_alloc.destroy(_data + i);
 				_alloc.deallocate(_data, _capacity);
+				_alloc = other._alloc;
 				_size = other._size;
-				_capacity = other._capacity;
+				_capacity = _size;
 				_data = _alloc.allocate(_capacity);
 				for (size_type i = 0 ; i < _size ; i++)
 					_alloc.construct(_data + i, other._data[i]);
+				return *this;
 			}
 
 			void assign(size_type count, const T& value) {
@@ -119,7 +122,7 @@ namespace ft {
 			}
 
 			template<class InputIt>
-				void assign(InputIt first,
+				void assign(typename std::enable_if<!is_integral<InputIt>::value, InputIt>::type first,
 							InputIt last) {
 					for (size_type i = 0 ; i < _size ; i++)
 						_alloc.destroy(_data + i);
@@ -166,7 +169,7 @@ namespace ft {
 			const_iterator begin() const { return ConstVectorIter<T>(_data); }
 			const_iterator end() const { return ConstVectorIter<T>(&_data[_size]); }
 			reverse_iterator rbegin() { return ReverseVectorIter<T>(&_data[_size - 1]); }
-			reverse_iterator rend() { return ConstReverseVectorIter<T>(&_data[-1]); }
+			reverse_iterator rend() { return ReverseVectorIter<T>(&_data[-1]); }
 			const_reverse_iterator rbegin() const { return ConstReverseVectorIter<T>(&_data[_size - 1]); }
 			const_reverse_iterator rend() const { return ConstReverseVectorIter<T>(&_data[-1]); }
 
@@ -232,11 +235,11 @@ namespace ft {
 			iterator erase(iterator first, iterator last) {
 				if (first < begin() || first > end())
 					return first;
-				size_type count;
-				for (iterator it = first, count = 0 ; it != last && it != end() ; it++, count++)
+				size_type count = 0;
+				for (iterator it = first ; it != last && it != end() ; it++, count++)
 					_alloc.destroy(_data + count); 	// the allocated objects are destroyed
-				memmove(_data + first - begin(), 	//dest of the tail end of the list; first - begin() gives the index of the first element to remove
-						_data + first - begin() + count,  //org of the tail end of the list, count elements after the begining of the area to remove
+				memmove(_data + (first - begin()), 	//dest of the tail end of the list; first - begin() gives the index of the first element to remove
+						_data + (first - begin()) + count,  //org of the tail end of the list, count elements after the begining of the area to remove
 						(_size - (begin() - first) - count) * sizeof(value_type)); //number of bytes to move
 				_size -= count;
 				return first;
@@ -257,12 +260,13 @@ namespace ft {
 			//the capacity of the vector is not reduced, but may be made bigger
 			void resize(size_type count, T value = T()) {
 				if (_size < count) {
+					size_type old_size = _size;
 					_makeEmptySpace(iterator(_data + _size - 1), count - _size);
-					for (size_t i = _size ; i < count ; i++)
-						_alloc.allocate(_data + i, value);
+					for (size_type i = old_size ; i < count ; i++)
+						_alloc.construct(_data + i, value);
 				}
 				else if (_size > count)
-					for (size_t i = count ; i < _size ; i++)
+					for (size_type i = count ; i < _size ; i++)
 						_alloc.destroy(_data + i);
 				_size = count;
 			}
