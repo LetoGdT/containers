@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/07 18:02:22 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:38:22 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 # define MAP_HPP
 # include <memory>
 # include <exception>
-# include "pair.hpp"
+# include "AVL_tree.hpp"
 
 namespace ft {
 	template<
 		class Key,
-	  class T,
-	  class Compare = std::less<Key>,
-	  class Allocator = std::allocator<std::pair<const Key, T>>>
+		class T,
+		class Compare = std::less<Key>,
+		class Allocator = std::allocator<std::pair<const Key, T>>>
 	class map {
 		public:
 			typedef Key key_type;
@@ -41,7 +41,7 @@ namespace ft {
 			typedef ConstReverseMapIter<T> const_reverse_iterator;
 
 			map();
-			explicit map(const Compare& comp, const Allocator& alloc = Allocator());
+			explicit map(Compare const & comp, const Allocator& alloc = Allocator());
 			template<class InputIt>
 				map(InputIt first, InputIt last,
 					const Compare& comp = Compare(),
