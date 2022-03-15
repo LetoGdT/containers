@@ -6,37 +6,14 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/08 20:40:28 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:43:57 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
-#include "is_integral.hpp"
-#include "pair.hpp"
+#include "AVL_tree.hpp"
 #include <iostream>
 
 int main() {
-	ft::vector<int> v;
-
-	for (int i = 0 ; i < 20 ; i++)
-		v.push_back(i);
-
-	ft::vector<int> w;
-	for (auto i = 0 ; i < 5 ; i++)
-		w.push_back(i + 40);
-
-	for (auto it = v.begin() ; it != v.end() ; it++)
-		std::cout << *it << std::endl;
-
-	v.assign(w.begin(), w.end());
-
-	std::cout << std::endl;
-	for (auto it = v.begin() ; it != v.end() ; it++)
-		std::cout << *it << std::endl;
-
-	std::cout << std::endl;
-	std::cout << v.capacity() << std::endl;
-	std::cout << v.size() << std::endl;
 
 	return 0;
 }
