@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/15 19:43:57 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/16 19:41:49 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 #include <iostream>
 
 int main() {
-
+	ft::AVL_tree<int, int, std::less<int>, std::allocator<ft::pair<int, int>>> tree;
+	for (int i = 0 ; i < 127 ; i++) {
+		tree.insert(ft::pair<int, int>(i, i));
+	}
+	tree.print();
+	std::cout << tree.find(126)->second << std::endl;
 	return 0;
 }
 

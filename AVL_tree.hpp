@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/15 19:36:43 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/16 19:39:47 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <memory>
 # include <algorithm>
 # include "pair.hpp"
+#include <iostream>
 
 namespace ft {
 	template <
@@ -28,8 +29,8 @@ namespace ft {
 
 			class Node {
 				public:
-					Node(): _left(NULL), _right(NULL), _parent(NULL), _height(0), _blance_factor(0) {}
-					Node(entry content): _left(NULL), _right(NULL), _parent(NULL), _height(0), _blance_factor(0), _content(content) {}
+					Node(): _left(NULL), _right(NULL), _parent(NULL), _height(0), _balance_factor(0) {}
+					Node(entry content): _left(NULL), _right(NULL), _parent(NULL), _height(0), _balance_factor(0), _content(content) {}
 					~Node() {}
 
 					Node *_left;
@@ -37,13 +38,13 @@ namespace ft {
 					Node *_parent;
 					entry _content;
 					std::size_t _height;
-					std::ptrdiff_t _blance_factor;
+					std::ptrdiff_t _balance_factor;
 			};
 			Node * balance(Node * node) {
 				// Left heavy subtree
-				if (node->balance_factor == -2) {
+				if (node->_balance_factor == -2) {
 					// Left left case
-					if (node->_left->_blance_factor <= 0)
+					if (node->_left->_balance_factor <= 0)
 						return rotate_right(node);
 					// Left right case
 					else {
@@ -52,15 +53,15 @@ namespace ft {
 					}
 				}
 				// Right heavy subtree
-				else if (node->balance_factor == 2) {
+				else if (node->_balance_factor == 2) {
 					// Right left case
-					if (node->_right->_blance_factor >= 0){
+					if (node->_right->_balance_factor < 0){
 						node->_right = rotate_right(node->_right);
 						return rotate_left(node);
 					}
 					// Right right case
 					else
-						rotate_left(node);
+						return rotate_left(node);
 				}
 				return node;
 			}
@@ -72,7 +73,7 @@ namespace ft {
 				if (node->_right != NULL)
 					right_height = node->_right->_height;
 				node->_height = std::max(left_height, right_height) + 1;
-				node->_blance_factor = right_height - left_height;
+				node->_balance_factor = right_height - left_height;
 			}
 
 			Node * insert(Node * node, entry const & content, Compare const & comp) {
@@ -81,18 +82,18 @@ namespace ft {
 				if (comp(content.first, node->_content.first)) {
 					if (node->_left == NULL) {
 						node->_left = make_node(content);
-						node->_left->_parent = this;
+						node->_left->_parent = node;
 					}
 					else
-						node->_left = insert(content, comp);
+						node->_left = insert(node->_left, content, comp);
 				}
 				else {
 					if (node->_right == NULL) {
 						node->_right = make_node(content);
-						node->_right->_parent = this;
+						node->_right->_parent = node;
 					}
 					else
-						node->_right = insert(content, comp);
+						node->_right = insert(node->_right, content, comp);
 				}
 				update(node);
 				return balance(node);
@@ -103,7 +104,7 @@ namespace ft {
 				if (node == NULL)
 					return NULL;
 				if (node->_content.first == key)
-					return node->_content;
+					return &node->_content;
 				if (comp(node->_content.first, key))
 					return find(node->_left, key, comp);
 				return find(node->_right, key, comp);
@@ -113,7 +114,7 @@ namespace ft {
 				Node *tmp = A->_right;
 				A->_right = tmp->_left;
 				if (tmp->_left != NULL)
-					tmp->_left->parent = A;
+					tmp->_left->_parent = A;
 				tmp->_left = A;
 				tmp->_parent = A->_parent;
 				A->_parent = tmp;
@@ -131,7 +132,7 @@ namespace ft {
 				Node *tmp = A->_left;
 				A->_left = tmp->_right;
 				if (tmp->_right != NULL)
-					tmp->_right->parent = A;
+					tmp->_right->_parent = A;
 				tmp->_right = A;
 				tmp->_parent = A->_parent;
 				A->_parent = tmp;
@@ -153,11 +154,11 @@ namespace ft {
 				res = make_node(other->_content);
 				res->_left = copy_node(other->_left);
 				res->_right = copy_node(other->_right);
-				res->_blance_factor = other->_blance_factor;
+				res->_balance_factor = other->_balance_factor;
 				res->_height = other->_height;
 			}
 
-			void destroy_node(Node const * node) {
+			void destroy_node(Node * node) {
 				if (node == NULL)
 					return ;
 				destroy_node(node->_left);
@@ -172,15 +173,19 @@ namespace ft {
 				_alloc.construct(res, node);
 				return res;
 			}
+			typedef typename Allocator::template rebind<Node>::other allocator_type;
 
 		public:
-			AVL_tree(): _root(NULL), _alloc(Allocator()), _nb_of_nodes(0), _comp(Compare()) {}
-			AVL_tree(AVL_tree const & other) {
-				_root = copy_node(other._root);
-				_alloc = other._alloc;
-				_nb_of_nodes = other._nb_of_nodes;
-				_comp = other.comp;
-			}
+			AVL_tree(): _root(NULL),
+						_nb_of_nodes(0),
+						_alloc(allocator_type()),
+						_comp(Compare()) {
+				_alloc = allocator_type();
+						}
+			AVL_tree(AVL_tree const & other): _root(copy_node(other._root)),
+											  _nb_of_nodes(other._nb_of_nodes),
+											  _alloc(other._alloc),
+											  _comp(other.comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
 				_root = copy_node(other._root);
@@ -204,13 +209,32 @@ namespace ft {
 				return find(_root, key, _comp);
 			}
 
+			void print_tree(Node * node, std::size_t depth) {
+				if (node->_right != NULL)
+					print_tree(node->_right, depth + 1);
+				for (int i = 1 ; i < depth ; i++)
+					std::cout << " ";
+				if (node->_parent != NULL) {
+					if (node->_parent->_right == node)
+						std::cout << "/";
+					else
+						std::cout << "\\";
+				}
+				std::cout << node->_content.second << std::endl;
+				if (node->_left != NULL)
+					print_tree(node->_left, depth + 1);
+			}
+
+			void print() {
+				print_tree(_root, 0);
+			}
+
 
 		private:
 			Node *_root;
-			Allocator _alloc;
+			allocator_type _alloc;
 			std::size_t _nb_of_nodes;
 			Compare _comp;
-
 	};
 }
 
