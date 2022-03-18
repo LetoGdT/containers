@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/16 19:39:47 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/18 18:13:48 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,17 @@ namespace ft {
 
 			class Node {
 				public:
-					Node(): _left(NULL), _right(NULL), _parent(NULL), _height(0), _balance_factor(0) {}
-					Node(entry content): _left(NULL), _right(NULL), _parent(NULL), _height(0), _balance_factor(0), _content(content) {}
+					Node(): _left(NULL),
+							_right(NULL),
+							_parent(NULL),
+							_height(0),
+							_balance_factor(0) {}
+					Node(entry content): _left(NULL),
+										 _right(NULL),
+										 _parent(NULL),
+										 _height(0),
+										 _balance_factor(0),
+										 _content(content) {}
 					~Node() {}
 
 					Node *_left;
@@ -99,15 +108,76 @@ namespace ft {
 				return balance(node);
 			}
 
-			std::size_t remove(const Key key);
-			entry * find(Node * node, const Key key, Compare const & comp) {
+			Node * find(Node * node, const Key key, Compare const & comp) {
 				if (node == NULL)
 					return NULL;
 				if (node->_content.first == key)
-					return &node->_content;
+					return node;
 				if (comp(node->_content.first, key))
 					return find(node->_left, key, comp);
 				return find(node->_right, key, comp);
+			}
+
+			Node * get_successor(Node *node) {
+				Node * res = node->_left;
+				while (res->_right != NULL)
+					res = res->_right;
+				return res;
+			}
+
+			void bypass_target(Node * parent, Node * target, Node * child) {
+				if (parent != NULL) {
+					if (parent->_left == target)
+						parent->_left = child;
+					else
+						parent->_right = child;
+				}
+			}
+
+			Node * remove(Node * node, Key const & key, Compare const & comp) {
+				Node * target = find(node, node->_content.first, comp);
+				if (target == NULL)
+					return NULL;
+				Node * parent = target->_parent;
+
+				// Case where the node has no children
+				if (target->_left == NULL && target->_right == NULL) {
+					bypass_target(parent, target, NULL);
+					destroy_node(target);
+				}
+
+				// Case where the node has only one child
+				else if (target->_left == NULL || target->_right == NULL) {
+					Node * successor = target->_left;
+					if (successor == NULL)
+						successor = target->_right;
+					// Link the parent to the child
+					bypass_target(parent, target, successor);
+					// Link the child to the parent
+					successor->_parent = parent;
+					// Destroy the target node
+					target->_left = NULL;
+					target->_right = NULL;
+					destroy_node(target);
+				}
+
+				// Case where the node has children on both sides
+				else {
+					Node * successor = get_successor(target);
+					target->_content =  successor->_content;
+					remove(successor, successor->_content.first, comp);
+					for (Node * i = successor; i != node ; i = i->_parent) {
+						update(i);
+						balance(i);
+					}
+				}
+				if (parent != NULL) {
+					update(parent);
+					balance(parent);
+				}
+				if (node == target)
+					return NULL;
+				return node;
 			}
 
 			Node* rotate_left(Node *A) {
@@ -206,7 +276,14 @@ namespace ft {
 			}
 
 			entry * find(Key const key) {
-				return find(_root, key, _comp);
+				Node * tmp = find(_root, key, _comp);
+				if (tmp != NULL)
+					return tmp->_content;
+				return NULL;
+			}
+
+			void erase(Key const & key) {
+				_root = remove(_root, key, _comp);
 			}
 
 			void print_tree(Node * node, std::size_t depth) {
