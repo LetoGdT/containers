@@ -6,11 +6,12 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/16 19:41:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:43:27 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AVL_tree.hpp"
+#include "pair.hpp"
 #include <iostream>
 
 int main() {
@@ -19,7 +20,8 @@ int main() {
 		tree.insert(ft::pair<int, int>(i, i));
 	}
 	tree.print();
-	std::cout << tree.find(126)->second << std::endl;
+	tree.remove(126);
+	tree.print();
 	return 0;
 }
 

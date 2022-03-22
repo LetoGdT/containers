@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/18 18:13:48 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:43:17 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ namespace ft {
 				if (node->_content.first == key)
 					return node;
 				if (comp(node->_content.first, key))
-					return find(node->_left, key, comp);
-				return find(node->_right, key, comp);
+					return find(node->_right, key, comp);
+				return find(node->_left, key, comp);
 			}
 
 			Node * get_successor(Node *node) {
@@ -278,7 +278,7 @@ namespace ft {
 			entry * find(Key const key) {
 				Node * tmp = find(_root, key, _comp);
 				if (tmp != NULL)
-					return tmp->_content;
+					return &tmp->_content;
 				return NULL;
 			}
 
@@ -304,6 +304,12 @@ namespace ft {
 
 			void print() {
 				print_tree(_root, 0);
+			}
+
+			bool remove(Key const & key) {
+				if (remove(_root, key, _comp) != NULL)
+					return true;
+				return false;
 			}
 
 
