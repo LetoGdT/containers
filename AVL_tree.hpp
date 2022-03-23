@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/22 18:43:17 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/23 18:23:27 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace ft {
 					Node *_parent;
 					entry _content;
 					std::size_t _height;
-					std::ptrdiff_t _balance_factor;
+					short _balance_factor;
 			};
 			Node * balance(Node * node) {
 				// Left heavy subtree
@@ -81,7 +81,9 @@ namespace ft {
 					left_height = node->_left->_height;
 				if (node->_right != NULL)
 					right_height = node->_right->_height;
-				node->_height = std::max(left_height, right_height) + 1;
+				node->_height = std::max(left_height, right_height);
+				if (node->_left != NULL || node->_right != NULL)
+					node->_height++;
 				node->_balance_factor = right_height - left_height;
 			}
 
@@ -135,26 +137,28 @@ namespace ft {
 			}
 
 			Node * remove(Node * node, Key const & key, Compare const & comp) {
-				Node * target = find(node, node->_content.first, comp);
+				Node * target = find(node, key, comp);
 				if (target == NULL)
 					return NULL;
 				Node * parent = target->_parent;
+				Node * successor;
 
-				// Case where the node has no children
-				if (target->_left == NULL && target->_right == NULL) {
-					bypass_target(parent, target, NULL);
-					destroy_node(target);
-				}
-
-				// Case where the node has only one child
-				else if (target->_left == NULL || target->_right == NULL) {
-					Node * successor = target->_left;
-					if (successor == NULL)
+				// Case where the node has only one or no children
+				if (target->_left == NULL || target->_right == NULL) {
+					// Select the proper successor of the node
+					if (target->_left == NULL && target->_right == NULL)
+						successor = NULL;
+					else if (target->_right == NULL)
+						successor = target->_left;
+					else
 						successor = target->_right;
 					// Link the parent to the child
 					bypass_target(parent, target, successor);
 					// Link the child to the parent
-					successor->_parent = parent;
+					if (successor != NULL)
+						successor->_parent = parent;
+					else
+						successor = parent;
 					// Destroy the target node
 					target->_left = NULL;
 					target->_right = NULL;
@@ -163,18 +167,17 @@ namespace ft {
 
 				// Case where the node has children on both sides
 				else {
-					Node * successor = get_successor(target);
+					successor = get_successor(target);
 					target->_content =  successor->_content;
 					remove(successor, successor->_content.first, comp);
-					for (Node * i = successor; i != node ; i = i->_parent) {
-						update(i);
-						balance(i);
-					}
 				}
-				if (parent != NULL) {
-					update(parent);
-					balance(parent);
+				// Update and balance all the parents of the current node until
+				// the parent of the entry node is reached
+				for (Node * i = successor; i != parent && i != NULL; i = i->_parent) {
+					update(i);
+					balance(i);
 				}
+				_nb_of_nodes--;
 				if (node == target)
 					return NULL;
 				return node;
@@ -287,6 +290,8 @@ namespace ft {
 			}
 
 			void print_tree(Node * node, std::size_t depth) {
+				if (node == NULL)
+					return ;
 				if (node->_right != NULL)
 					print_tree(node->_right, depth + 1);
 				for (int i = 1 ; i < depth ; i++)
@@ -310,6 +315,10 @@ namespace ft {
 				if (remove(_root, key, _comp) != NULL)
 					return true;
 				return false;
+			}
+
+			entry * get_successor_iterator() {
+				Node * current_node;
 			}
 
 
