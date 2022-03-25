@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/23 18:23:27 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/25 19:55:16 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@ namespace ft {
 		class Compare,
 		class Allocator>
 	class AVL_tree {
-		private:
+		public:
 			typedef pair<Key, T> entry;
+			typedef std::size_t size_type;
+//			typedef typename map<Key, T, Compare, Allocator>::size_type size_type;
 
+		private:
 			class Node {
 				public:
 					Node(): _left(NULL),
@@ -49,34 +52,35 @@ namespace ft {
 					std::size_t _height;
 					short _balance_factor;
 			};
-			Node * balance(Node * node) {
+
+			Node * _balance(Node * node) {
 				// Left heavy subtree
 				if (node->_balance_factor == -2) {
 					// Left left case
 					if (node->_left->_balance_factor <= 0)
-						return rotate_right(node);
+						return _rotate_right(node);
 					// Left right case
 					else {
-						node->_left = rotate_left(node->_left);
-						return rotate_right(node);
+						node->_left = _rotate_left(node->_left);
+						return _rotate_right(node);
 					}
 				}
 				// Right heavy subtree
 				else if (node->_balance_factor == 2) {
 					// Right left case
 					if (node->_right->_balance_factor < 0){
-						node->_right = rotate_right(node->_right);
-						return rotate_left(node);
+						node->_right = _rotate_right(node->_right);
+						return _rotate_left(node);
 					}
 					// Right right case
 					else
-						return rotate_left(node);
+						return _rotate_left(node);
 				}
 				return node;
 			}
-			void update(Node * node) {
-				std::size_t left_height = 0;
-				std::size_t right_height = 0;
+			void _update(Node * node) {
+				size_type left_height = 0;
+				size_type right_height = 0;
 				if (node->_left != NULL)
 					left_height = node->_left->_height;
 				if (node->_right != NULL)
@@ -87,47 +91,47 @@ namespace ft {
 				node->_balance_factor = right_height - left_height;
 			}
 
-			Node * insert(Node * node, entry const & content, Compare const & comp) {
+			Node * _insert(Node * node, entry const & content, Compare const & comp) {
 				if (node == NULL)
-					return make_node(content);
+					return _make_node(content);
 				if (comp(content.first, node->_content.first)) {
 					if (node->_left == NULL) {
-						node->_left = make_node(content);
+						node->_left = _make_node(content);
 						node->_left->_parent = node;
 					}
 					else
-						node->_left = insert(node->_left, content, comp);
+						node->_left = _insert(node->_left, content, comp);
 				}
 				else {
 					if (node->_right == NULL) {
-						node->_right = make_node(content);
+						node->_right = _make_node(content);
 						node->_right->_parent = node;
 					}
 					else
-						node->_right = insert(node->_right, content, comp);
+						node->_right = _insert(node->_right, content, comp);
 				}
-				update(node);
-				return balance(node);
+				_update(node);
+				return _balance(node);
 			}
 
-			Node * find(Node * node, const Key key, Compare const & comp) {
+			Node * _find(Node * node, const Key key, Compare const & comp) {
 				if (node == NULL)
 					return NULL;
 				if (node->_content.first == key)
 					return node;
 				if (comp(node->_content.first, key))
-					return find(node->_right, key, comp);
-				return find(node->_left, key, comp);
+					return _find(node->_right, key, comp);
+				return _find(node->_left, key, comp);
 			}
 
-			Node * get_successor(Node *node) {
+			Node * _get_successor(Node *node) {
 				Node * res = node->_left;
 				while (res->_right != NULL)
 					res = res->_right;
 				return res;
 			}
 
-			void bypass_target(Node * parent, Node * target, Node * child) {
+			void _bypass_target(Node * parent, Node * target, Node * child) {
 				if (parent != NULL) {
 					if (parent->_left == target)
 						parent->_left = child;
@@ -136,8 +140,55 @@ namespace ft {
 				}
 			}
 
-			Node * remove(Node * node, Key const & key, Compare const & comp) {
-				Node * target = find(node, key, comp);
+			void _exchange_nodes(Node * A, Node * B) {
+				if (A == NULL || B == NULL)
+					return ;
+				Node * tmp;
+
+				// Setting relations between B and it’s parent to A
+				tmp = B->_parent;
+				if (B->_parent != NULL) {
+					if (B->_parent->_right == B)
+						B->_parent->_right = A;
+					else
+						B->_parent->_left = A;
+				}
+				B->_parent = A->_parent;
+
+				// Setting relations between A and it’s parent to B
+				if (A->_parent != NULL) {
+					if (A->_parent->_right == A)
+						A->_parent->_right = B;
+					else
+						A->_parent->_left = B;
+				}
+				A->_parent = tmp;
+
+				// Setting B’s left child as A’s left child
+				tmp = A->_left;
+				A->_left = B->_left;
+				if (B->_left != NULL)
+					B->_left->_parent = A;
+
+				// Setting tmp (A’s old left child) as B’s left child
+				B->_left = tmp;
+				if (tmp != NULL) // tmp is A’s old left child here
+					tmp->_parent = B;
+
+				// Setting B’s right child as A’s right child
+				tmp = A->_right;
+				A->_right = B->_right;
+				if (B->_right != NULL)
+					B->_right->_parent = A;
+
+				// Setting tmp (A’s old right child) as B’s right child
+				B->_right = tmp;
+				if (tmp != NULL) // tmp is A’s old right child here
+					tmp->_parent = B;
+			}
+
+			Node * _remove(Node * node, Key const & key, Compare const & comp) {
+				Node * target = _find(node, key, comp);
 				if (target == NULL)
 					return NULL;
 				Node * parent = target->_parent;
@@ -153,7 +204,7 @@ namespace ft {
 					else
 						successor = target->_right;
 					// Link the parent to the child
-					bypass_target(parent, target, successor);
+					_bypass_target(parent, target, successor);
 					// Link the child to the parent
 					if (successor != NULL)
 						successor->_parent = parent;
@@ -162,20 +213,29 @@ namespace ft {
 					// Destroy the target node
 					target->_left = NULL;
 					target->_right = NULL;
-					destroy_node(target);
+					_destroy_node(target);
 				}
 
 				// Case where the node has children on both sides
 				else {
-					successor = get_successor(target);
-					target->_content =  successor->_content;
-					remove(successor, successor->_content.first, comp);
+					successor = _get_successor(target);
+					_exchange_nodes(target, successor);
+					successor = target->_parent; // Set successor so that the tree can be updated and balanced
+					bool is_left = target == successor->_left;
+					_remove(target, target->_content.first, comp);
+					if (is_left) {
+						if (successor->_left)
+							successor = successor->_left;
+					} else
+						if (successor->_right)
+							successor = successor->_right;
+
 				}
 				// Update and balance all the parents of the current node until
 				// the parent of the entry node is reached
 				for (Node * i = successor; i != parent && i != NULL; i = i->_parent) {
-					update(i);
-					balance(i);
+					_update(i);
+					_balance(i);
 				}
 				_nb_of_nodes--;
 				if (node == target)
@@ -183,7 +243,7 @@ namespace ft {
 				return node;
 			}
 
-			Node* rotate_left(Node *A) {
+			Node* _rotate_left(Node *A) {
 				Node *tmp = A->_right;
 				A->_right = tmp->_left;
 				if (tmp->_left != NULL)
@@ -197,11 +257,11 @@ namespace ft {
 					else
 						tmp->_parent->_right = tmp;
 				}
-				update(A);
-				update(tmp);
+				_update(A);
+				_update(tmp);
 				return tmp;
 			}
-			Node* rotate_right(Node *A) {
+			Node* _rotate_right(Node *A) {
 				Node *tmp = A->_left;
 				A->_left = tmp->_right;
 				if (tmp->_right != NULL)
@@ -215,38 +275,40 @@ namespace ft {
 					else
 						tmp->_parent->_right = tmp;
 				}
-				update(A);
-				update(tmp);
+				_update(A);
+				_update(tmp);
 				return tmp;
 			}
 
-			Node * copy_node(Node const * other) {
+			Node * _copy_node(Node const * other) {
 				if (other == NULL)
 					return NULL;
 				Node * res;
-				res = make_node(other->_content);
-				res->_left = copy_node(other->_left);
-				res->_right = copy_node(other->_right);
+				res = _make_node(other->_content);
+				res->_left = _copy_node(other->_left);
+				res->_right = _copy_node(other->_right);
 				res->_balance_factor = other->_balance_factor;
 				res->_height = other->_height;
 			}
 
-			void destroy_node(Node * node) {
+			void _destroy_node(Node * node) {
 				if (node == NULL)
 					return ;
-				destroy_node(node->_left);
-				destroy_node(node->_right);
+				_destroy_node(node->_left);
+				_destroy_node(node->_right);
 				_alloc.destroy(node);
 				_alloc.deallocate(node, 1);
 			}
 
-			Node * make_node(entry content) {
+			Node * _make_node(entry content) {
 				Node node(content);
 				Node * res = _alloc.allocate(1);
 				_alloc.construct(res, node);
 				return res;
 			}
 			typedef typename Allocator::template rebind<Node>::other allocator_type;
+
+		// Fonctions de manipulation de l’arbre
 
 		public:
 			AVL_tree(): _root(NULL),
@@ -255,41 +317,47 @@ namespace ft {
 						_comp(Compare()) {
 				_alloc = allocator_type();
 						}
-			AVL_tree(AVL_tree const & other): _root(copy_node(other._root)),
+			AVL_tree(Compare & comp, Allocator & alloc): _root(NULL),
+														 _nb_of_nodes(0),
+														 _alloc(allocator_type()),
+														 _comp(comp) {
+				_alloc = allocator_type();
+						}
+			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root)),
 											  _nb_of_nodes(other._nb_of_nodes),
 											  _alloc(other._alloc),
 											  _comp(other.comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
-				_root = copy_node(other._root);
+				_root = _copy_node(other._root);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
 				_comp = other.comp;
 			}
 
 			~AVL_tree() {
-				destroy_node(_root);
+				_destroy_node(_root);
 			}
 
 			void insert(entry const & content) {
-				if (find(_root, content.first, _comp) != NULL)
+				if (_find(_root, content.first, _comp) != NULL)
 					return ;
-				_root = insert(_root, content, _comp);
+				_root = _insert(_root, content, _comp);
 				_nb_of_nodes++;
 			}
 
 			entry * find(Key const key) {
-				Node * tmp = find(_root, key, _comp);
+				Node * tmp = _find(_root, key, _comp);
 				if (tmp != NULL)
 					return &tmp->_content;
 				return NULL;
 			}
 
 			void erase(Key const & key) {
-				_root = remove(_root, key, _comp);
+				_root = _remove(_root, key, _comp);
 			}
 
-			void print_tree(Node * node, std::size_t depth) {
+			void print_tree(Node * node, size_type depth) {
 				if (node == NULL)
 					return ;
 				if (node->_right != NULL)
@@ -311,21 +379,21 @@ namespace ft {
 				print_tree(_root, 0);
 			}
 
-			bool remove(Key const & key) {
-				if (remove(_root, key, _comp) != NULL)
-					return true;
-				return false;
+			entry * get_successor_iterator(Node * current_node, Node * predecessor_node) {
+				 
 			}
 
-			entry * get_successor_iterator() {
-				Node * current_node;
+			size_type get_size() const { return _nb_of_nodes; }
+			void clear() {
+				_nb_of_nodes = 0;
+				_destroy_node(_root);
+				_root = NULL;
 			}
-
 
 		private:
 			Node *_root;
 			allocator_type _alloc;
-			std::size_t _nb_of_nodes;
+			size_type _nb_of_nodes;
 			Compare _comp;
 	};
 }

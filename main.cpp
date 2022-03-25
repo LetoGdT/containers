@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/23 18:03:53 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:41:08 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int main() {
 		tree.insert(ft::pair<int, int>(i, i));
 	}
 	tree.print();
-	tree.remove(9);
-	tree.remove(11);
-	tree.remove(5);
+	tree.erase(9);
+	tree.erase(11);
+	tree.erase(5);
 	std::cout << std::endl;
 	std::cout << std::endl;
 	std::cout << std::endl;

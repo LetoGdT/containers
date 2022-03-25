@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/09 17:38:22 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/23 22:35:08 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,23 @@
 # include "AVL_tree.hpp"
 
 namespace ft {
+	template<typename T>
+	class MapIter;
+	template<typename T>
+	class ConstMapIter;
+	template<typename T>
+	class ReverseMapIter;
+	template<typename T>
+	class ConstReverseMapIter;
+
 	template<
 		class Key,
 		class T,
 		class Compare = std::less<Key>,
 		class Allocator = std::allocator<std::pair<const Key, T>>>
 	class map {
+		private:
+			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
 		public:
 			typedef Key key_type;
 			typedef T mapped_type;
@@ -40,39 +51,68 @@ namespace ft {
 			typedef ReverseMapIter<T> reverse_iterator;
 			typedef ConstReverseMapIter<T> const_reverse_iterator;
 
-			map();
-			explicit map(Compare const & comp, const Allocator& alloc = Allocator());
+			map(): map(Compare(), Allocator()) {}
+			explicit map(Compare const & comp, const Allocator& alloc = Allocator()) {
+				_tree = _tree_type(comp, alloc);
+			}
 			template<class InputIt>
 				map(InputIt first, InputIt last,
 					const Compare& comp = Compare(),
-					const Allocator& alloc = Allocator() );
-			map(const map& other);
-			map& operator=(map const & other);
+					const Allocator& alloc = Allocator()): map(comp, alloc) {
+				for (InputIt i = first ; i != last ; i++)
+					_tree.insert(*i);
+			}
+			map(const map& other): _tree(other._tree) {}
+			map& operator=(map const & other) {
+				_tree = other.tree;
+			}
 			~map();
 
 		//element access
-			reference at(const key_type& key);
-			const_reference at(const key_type& key) const;
-			reference operator[](const key_type& key);
-			const_reference operator[](const key_type& key) const;
+			reference at(const key_type& key) {
+				value_type *tmp = _tree.find(key);
+				if (tmp == NULL)
+					throw std::out_of_range("ft::map: value not found");
+				return tmp->second;
+			}
+			const_reference at(const key_type& key) const {
+				value_type *tmp = _tree.find(key);
+				if (tmp == NULL)
+					throw std::out_of_range("ft::map: value not found");
+				return tmp->second;
+			}
+			reference operator[](const key_type& key) {
+				value_type *tmp = _tree.find(key);
+				if (tmp == NULL)
+					throw std::out_of_range("ft::map: value not found");
+				return tmp->second;
+			}
+			const_reference operator[](const key_type& key) const {
+				value_type *tmp = _tree.find(key);
+				if (tmp == NULL)
+					throw std::out_of_range("ft::map: value not found");
+				return tmp->second;
+			}
 
 		//iterators
-			iterator begin() { return MapIter<T>(_data); }
-			iterator end() { return MapIter<T>(&_data[_size]); }
-			const_iterator begin() const { return ConstMapIter<T>(_data); }
-			const_iterator end() const { return ConstMapIter<T>(&_data[_size]); }
-			reverse_iterator rbegin() { return ReverseMapIter<T>(&_data[_size - 1]); }
-			reverse_iterator rend() { return ConstReverseMapIter<T>(&_data[-1]); }
-			const_reverse_iterator rbegin() const { return ConstReverseMapIter<T>(&_data[_size - 1]); }
-			const_reverse_iterator rend() const { return ConstReverseMapIter<T>(&_data[-1]); }
+			iterator begin();
+			iterator end();
+			const_iterator begin() const;
+			const_iterator end() const;
+			reverse_iterator rbegin();
+			reverse_iterator rend();
+			const_reverse_iterator rbegin() const;
+			const_reverse_iterator rend() const;
 
 		//capacity
-			bool empty() const;
-			size_type size() const;
-			size_type max_size() const;
+			bool empty() const { return _tree.get_size() == 0; }
+			size_type size() const { return _tree.get_size(); }
+			size_type max_size() const { return std::numeric_limits<size_type>::max(); }
 
 		//modifiers
-			void clear();
+			void clear() {
+				_tree.clear();
+			}
 			std::pair<iterator, bool> insert( const value_type& value );
 			iterator insert( iterator hint, const value_type& value );
 			template< class InputIt >
@@ -107,6 +147,8 @@ namespace ft {
 			friend void swap(value_type& lhs, 
 							 value_type& rhs );
 
+		private:
+			_tree_type _tree;
 	};
 }
 
