@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/25 19:55:16 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/03/29 20:28:58 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ namespace ft {
 										 _height(0),
 										 _balance_factor(0),
 										 _content(content) {}
+					Node(Node const & other): _left(other._left),
+                                              _right(other._right),
+                                              _parent(other._parent),
+                                              _height(other._height),
+                                              _balance_factor(other._balance_factor),
+                                              _content(other._content) {}
 					~Node() {}
 
 					Node *_left;
@@ -52,6 +58,15 @@ namespace ft {
 					std::size_t _height;
 					short _balance_factor;
 			};
+
+			Node * _rec_balance(Node *node) {
+				if (node == NULL)
+					return NULL;
+				_rec_balance(node->_left);
+				_rec_balance(node->_right);
+				_update(node);
+				return _balance(node);
+			}
 
 			Node * _balance(Node * node) {
 				// Left heavy subtree
@@ -143,48 +158,48 @@ namespace ft {
 			void _exchange_nodes(Node * A, Node * B) {
 				if (A == NULL || B == NULL)
 					return ;
-				Node * tmp;
+				Node tmp(*A);
 
-				// Setting relations between B and it’s parent to A
-				tmp = B->_parent;
-				if (B->_parent != NULL) {
-					if (B->_parent->_right == B)
-						B->_parent->_right = A;
-					else
-						B->_parent->_left = A;
-				}
-				B->_parent = A->_parent;
-
-				// Setting relations between A and it’s parent to B
+				// Setting A’s parent relationship
+				A->_parent = B->_parent;
 				if (A->_parent != NULL) {
-					if (A->_parent->_right == A)
-						A->_parent->_right = B;
+					if (A->_parent->_right == B)
+						A->_parent->_right = A;
 					else
-						A->_parent->_left = B;
+						A->_parent->_left = A;
 				}
-				A->_parent = tmp;
-
-				// Setting B’s left child as A’s left child
-				tmp = A->_left;
+				// Setting A’s children
 				A->_left = B->_left;
-				if (B->_left != NULL)
-					B->_left->_parent = A;
-
-				// Setting tmp (A’s old left child) as B’s left child
-				B->_left = tmp;
-				if (tmp != NULL) // tmp is A’s old left child here
-					tmp->_parent = B;
-
-				// Setting B’s right child as A’s right child
-				tmp = A->_right;
+				if (A->_left != NULL)
+					A->_left->_parent = A;
 				A->_right = B->_right;
-				if (B->_right != NULL)
-					B->_right->_parent = A;
+				if (A->_right != NULL)
+					A->_right->_parent = A;
 
-				// Setting tmp (A’s old right child) as B’s right child
-				B->_right = tmp;
-				if (tmp != NULL) // tmp is A’s old right child here
-					tmp->_parent = B;
+				// Setting B’s parent relationship
+				B->_parent = tmp._parent;
+				if (B->_parent != NULL) {
+					if (B->_parent->_right == A)
+						B->_parent->_right = B;
+					else
+						B->_parent->_left = B;
+				}
+				// Setting B’s children
+				B->_left = tmp._left;
+				if (B->_left != NULL)
+					B->_left->_parent = B;
+				B->_right = tmp._right;
+				if (B->_right != NULL)
+					B->_right->_parent = B;
+
+				A->_balance_factor = B->_balance_factor;
+				B->_balance_factor = tmp._balance_factor;
+				A->_height = B->_height;
+				B->_height = tmp._height;
+				if (_root == A)
+					_root = B;
+				else if (_root == B)
+					_root = A;
 			}
 
 			Node * _remove(Node * node, Key const & key, Compare const & comp) {
@@ -214,32 +229,23 @@ namespace ft {
 					target->_left = NULL;
 					target->_right = NULL;
 					_destroy_node(target);
+					_nb_of_nodes--;
 				}
 
 				// Case where the node has children on both sides
 				else {
 					successor = _get_successor(target);
 					_exchange_nodes(target, successor);
-					successor = target->_parent; // Set successor so that the tree can be updated and balanced
-					bool is_left = target == successor->_left;
-					_remove(target, target->_content.first, comp);
-					if (is_left) {
-						if (successor->_left)
-							successor = successor->_left;
-					} else
-						if (successor->_right)
-							successor = successor->_right;
-
+					successor = _remove(target, target->_content.first, comp);
 				}
 				// Update and balance all the parents of the current node until
 				// the parent of the entry node is reached
-				for (Node * i = successor; i != parent && i != NULL; i = i->_parent) {
+				for (Node * i = successor; i != node && i != NULL; i = i->_parent) {
 					_update(i);
-					_balance(i);
+					i = _balance(i);
 				}
-				_nb_of_nodes--;
 				if (node == target)
-					return NULL;
+					return parent;
 				return node;
 			}
 
@@ -354,7 +360,7 @@ namespace ft {
 			}
 
 			void erase(Key const & key) {
-				_root = _remove(_root, key, _comp);
+				_remove(_root, key, _comp);
 			}
 
 			void print_tree(Node * node, size_type depth) {
