@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/11 17:57:47 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 17:46:53 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,26 @@
 namespace ft{
 	template<typename T, 
 			 typename Key,
-			 typename tree_type>
+			 typename Compare,
+			 typename Allocator>
 	class MapIter {
 		private:
-			typedef typename AVL_tree<Key,
-					 		  T,
-							  typename ft::map<Key, T>::Compare,
-							  typename ft::map<Key, T>::Allocator>::Node _Node;
+			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
+			typedef typename ft::map<Key, T, Compare, Allocator> _map_type;
+			typedef typename _tree_type::Node _Node;
 
 		public:
-			typedef typename ft::map<T, Key>::difference_type difference_type;
-			typedef typename ft::map<T, Key>::value_type value_type;
-			typedef typename ft::map<T, Key>::pointer pointer;
-			typedef typename ft::map<T, Key>::reference reference;
+			typedef typename _map_type::difference_type difference_type;
+			typedef typename _map_type::value_type value_type;
+			typedef typename _map_type::pointer pointer;
+			typedef typename _map_type::reference reference;
 			typedef std::random_access_iterator_tag iterator_category;
 
-			MapIter(): _data(NULL), _is_end(false) {}
-			MapIter(pointer data): _data(data), _is_end(false) {}
-			MapIter(const MapIter & other): _data(other._data), _is_end(other._is_end) {}
+			MapIter(): MapIter(NULL) {}
+			MapIter(pointer data): _data(data), _is_end(false), _comp(Compare()) {}
+			MapIter(const MapIter & other): _data(other._data),
+											_is_end(other._is_end),
+											_comp(other._comp) {}
 			MapIter & operator=(MapIter const & other) {
 				_data = other._data;
 				_is_end = other._is_end;
@@ -45,10 +47,10 @@ namespace ft{
 
 			friend bool operator==(const MapIter & lhs, const MapIter & rhs) {return !(lhs < rhs || lhs > rhs); }
 			friend bool operator!=(const MapIter & lhs, const MapIter & rhs) { return !(lhs==rhs); }
-			friend bool operator<(const MapIter & lhs, const MapIter & rhs) { return lhs._data < rhs._data; }
-			friend bool operator>(const MapIter & lhs, const MapIter & rhs) { return lhs._data > rhs._data; }
-			friend bool operator<=(const MapIter & lhs, const MapIter & rhs) { return lhs._data <= rhs._data; }
-			friend bool operator>=(const MapIter & lhs, const MapIter & rhs) { return lhs._data >= rhs._data; }
+			friend bool operator<(const MapIter & lhs, const MapIter & rhs) { return lhs._comp((*lhs).first, (*rhs).first); }
+			friend bool operator>(const MapIter & lhs, const MapIter & rhs) { return !lhs._comp((*lhs).first, (*rhs).first); }
+			friend bool operator<=(const MapIter & lhs, const MapIter & rhs) { return lhs < rhs || lhs == rhs; }
+			friend bool operator>=(const MapIter & lhs, const MapIter & rhs) { return lhs > rhs || lhs == rhs; }
 			friend MapIter operator+(const MapIter & it, difference_type n) {
 				MapIter iter(it);
 				for (int i = 0 ; i < n ; i++)
@@ -92,7 +94,7 @@ namespace ft{
 				if (tmp == NULL)
 					_is_end = true;
 				else
-					_data = get_successor_iterator(_data);
+					_data = tmp;
 				return *this;
 			}
 			MapIter operator++(int) { 
@@ -101,14 +103,14 @@ namespace ft{
 				if (tmp == NULL)
 					_is_end = true;
 				else
-					_data = get_successor_iterator(_data);
+					_data = tmp;
 				return iter;
 			}
 			MapIter & operator--() {
 				_Node* tmp = get_predecessor_iterator(_data);
 				if (tmp != NULL) {
 					_is_end = false;
-					_data = get_predecessor_iterator(_data);
+					_data = tmp;
 				}
 				return *this;
 			}
@@ -117,23 +119,30 @@ namespace ft{
 				_Node* tmp = get_predecessor_iterator(_data);
 				if (tmp != NULL) {
 					_is_end = false;
-					_data = get_predecessor_iterator(_data);
+					_data = tmp;
 				}
 				return iter;
 			}
 			MapIter& operator+=(difference_type n) {
-				_data += n;
+				if (n < 0)
+					n = -n;
+				for (difference_type i = 0; i < n ; i++)
+					(*this)++;
 				return *this;
 			}
 			MapIter& operator-=(difference_type n) {
-				_data -= n;
+				if (n < 0)
+					n = -n;
+				for (difference_type i = 0; i < n ; i++)
+					(*this)--;
 				return *this;
 			}
 
 		private:
-			_Node*	_data;
-			tree_type _tree;
-			bool	_is_end;
+			_Node*		_data;
+			_tree_type	_tree;
+			Compare		_comp;
+			bool		_is_end;
 	};
 }
 

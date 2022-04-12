@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/11 16:20:21 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 17:32:21 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,25 @@
 # include "AVL_tree.hpp"
 
 namespace ft {
-	template<typename T,
-			 typename Key,
-			 typename tree_type>
+	template<typename Key,
+			 typename T,
+			 typename Compare,
+			 typename Allocator>
 	class MapIter;
-	template<typename T,
-			 typename Key>
+	template<typename Key,
+			 typename T,
+			 typename Compare,
+			 typename Allocator>
 	class ConstMapIter;
-	template<typename T,
-			 typename Key>
+	template<typename Key,
+			 typename T,
+			 typename Compare,
+			 typename Allocator>
 	class ReverseMapIter;
-	template<typename T,
-			 typename Key>
+	template<typename Key,
+			 typename T,
+			 typename Compare,
+			 typename Allocator>
 	class ConstReverseMapIter;
 
 	template<
@@ -51,10 +58,10 @@ namespace ft {
 			typedef const value_type& const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			typedef MapIter<T, Key, _tree_type> iterator;
-			typedef ConstMapIter<_tree_type> const_iterator;
-			typedef ReverseMapIter<_tree_type> reverse_iterator;
-			typedef ConstReverseMapIter<_tree_type> const_reverse_iterator;
+			typedef MapIter<Key, T, Compare, Allocator> iterator;
+			typedef ConstMapIter<Key, T, Compare, Allocator> const_iterator;
+			typedef ReverseMapIter<Key, T, Compare, Allocator> reverse_iterator;
+			typedef ConstReverseMapIter<Key, T, Compare, Allocator> const_reverse_iterator;
 
 			map(): map(Compare(), Allocator()) {}
 			explicit map(Compare const & comp, const Allocator& alloc = Allocator()) {
