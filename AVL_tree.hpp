@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/29 20:28:58 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:13:33 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ namespace ft {
 			typedef std::size_t size_type;
 //			typedef typename map<Key, T, Compare, Allocator>::size_type size_type;
 
-		private:
 			class Node {
 				public:
 					Node(): _left(NULL),
@@ -59,6 +58,7 @@ namespace ft {
 					short _balance_factor;
 			};
 
+		private:
 			Node * _rec_balance(Node *node) {
 				if (node == NULL)
 					return NULL;
@@ -385,8 +385,8 @@ namespace ft {
 				print_tree(_root, 0);
 			}
 
-			entry * get_successor_iterator(Node * current_node, Node * predecessor_node) {
-				 
+			Node* get_successor_iterator(Node * const current_node) const {
+
 			}
 
 			size_type get_size() const { return _nb_of_nodes; }
