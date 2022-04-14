@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/13 15:03:49 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/14 23:05:57 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "../map.hpp"
 
 namespace ft{
-	template<typename T, 
-			 typename Key,
+	template<typename Key,
+			 typename T,
 			 typename Compare,
 			 typename Allocator>
 	class MapIter {
@@ -34,9 +34,12 @@ namespace ft{
 			typedef std::random_access_iterator_tag iterator_category;
 
 			MapIter(): MapIter(NULL, NULL) {}
-			MapIter(pointer const data, _tree_type * const tree): _data(data),
+			MapIter(_Node * data, _tree_type * const tree): _data(data),
 																  _is_end(false),
-																  _tree(tree) {}
+																  _tree(tree) {
+				if (!data || !tree)
+					_is_end = true;
+			}
 			MapIter(const MapIter & other): _data(other._data),
 											_is_end(other._is_end),
 											_tree(other._tree) {}
@@ -123,7 +126,7 @@ namespace ft{
 
 			reference operator*() { return _data->content; }
 			const reference operator*() const { return _data->content; }
-			pointer operator->() { return &(_data->content); }
+			pointer operator->() { return &(_data->_content); }
 			const pointer operator->() const { return &(_data->content); }
 			reference operator[](difference_type n) {
 				MapIter iter(*this);

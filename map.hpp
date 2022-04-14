@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/13 23:10:30 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/14 23:12:50 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <memory>
 # include <limits>
 # include <exception>
+# include "pair.hpp"
 # include "AVL_tree.hpp"
 
 namespace ft {
@@ -43,10 +44,11 @@ namespace ft {
 		class Key,
 		class T,
 		class Compare = std::less<Key>,
-		class Allocator = std::allocator<std::pair<const Key, T>>>
+		class Allocator = std::allocator<ft::pair<const Key, T> > >
 	class map {
 		private:
 			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
+			typedef typename _tree_type::Node _Node;
 		public:
 			typedef Key key_type;
 			typedef T mapped_type;
@@ -79,7 +81,7 @@ namespace ft {
 			map& operator=(map const & other) {
 				_tree = other.tree;
 			}
-			~map();
+			~map() {}
 
 		//element access
 			mapped_type & at(const key_type& key) {
@@ -97,7 +99,7 @@ namespace ft {
 			mapped_type & operator[](const key_type& key) {
 				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
-					return _tree.insert(make_pair<key_type, mapped_type>(key, mapped_type()))->_content.second;
+					return _tree.insert(make_pair(key, mapped_type()))->_content.second;
 				return tmp->_content->second;
 			}
 
@@ -157,10 +159,10 @@ namespace ft {
 				_tree.clear();
 			}
 
-			std::pair<iterator, bool> insert(const value_type& value) {
-				typename _tree_type::Node* node = insert(value);
+			ft::pair<iterator, bool> insert(const value_type& value) {
+				typename _tree_type::Node* node = _tree.insert(value);
 				iterator iter(node, &_tree);
-				return make_pair<iterator, bool>(iter, node != NULL);
+				return ft::make_pair(iter, node != NULL);
 			}
 			iterator insert(iterator hint, const value_type& value) {
 				return insert(value).first;
@@ -202,16 +204,40 @@ namespace ft {
 
 			std::pair<iterator, iterator> equal_range(const Key& key) {
 				std::pair<iterator, iterator> res;
+				res.first = lower_bound(key);
+				res.second = upper_bound(key);
+				return res;
 			}
-			std::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
-			iterator lower_bound( const Key& key );
-			const_iterator lower_bound( const Key& key ) const;
-			iterator upper_bound( const Key& key );
-			const_iterator upper_bound( const Key& key ) const;
+			std::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
+				std::pair<const_iterator, const_iterator> res;
+				res.first = lower_bound(key);
+				res.second = upper_bound(key);
+				return res;
+			}
+			iterator lower_bound(const Key& key) {
+				typename _tree_type::Node * node = _tree.lower_bound(key);
+				iterator it(node, &_tree);
+				return it;
+			}
+			const_iterator lower_bound( const Key& key ) const {
+				typename _tree_type::Node * node = _tree.lower_bound(key);
+				const_iterator it(node, &_tree);
+				return it;
+			}
+			iterator upper_bound( const Key& key ) {
+				typename _tree_type::Node * node = _tree.upper_bound(key);
+				iterator it(node, &_tree);
+				return it;
+			}
+			const_iterator upper_bound( const Key& key ) const {
+				typename _tree_type::Node * node = _tree.upper_bound(key);
+				const_iterator it(node, &_tree);
+				return it;
+			}
 
 		//observers
 			key_compare key_comp() const;
-			std::map::value_compare value_comp() const;
+			Compare value_comp() const;
 
 		//friends
 			friend bool operator==(map const & lhs, map const & rhs);
@@ -228,4 +254,5 @@ namespace ft {
 	};
 }
 
+# include "map_it/iterator.hpp"
 #endif

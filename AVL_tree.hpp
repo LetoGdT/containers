@@ -6,16 +6,13 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/13 22:39:00 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/14 23:07:31 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AVL_TREE_HPP
 # define AVL_TREE_HPP
-# include <memory>
-# include <algorithm>
 # include "pair.hpp"
-# include "map.hpp"
 #include <iostream>
 
 namespace ft {
@@ -25,9 +22,14 @@ namespace ft {
 		class Compare,
 		class Allocator>
 	class AVL_tree {
+		private:
+			/*
+			typedef typename ft::map<Key, T, Compare, Allocator>::value_type _entry;
+			typedef typename ft::map<Key, T, Compare, Allocator>::size_type _size_type;
+			*/
+			typedef typename ft::pair<const Key, T> _entry;
+			typedef typename std::size_t _size_type;
 		public:
-			typedef pair<const Key, T> entry;
-			typedef typename ft::map<Key, T, Compare, Allocator>::size_type size_type;
 
 			class Node {
 				public:
@@ -36,7 +38,7 @@ namespace ft {
 							_parent(NULL),
 							_height(0),
 							_balance_factor(0) {}
-					Node(entry content): _left(NULL),
+					Node(_entry content): _left(NULL),
 										 _right(NULL),
 										 _parent(NULL),
 										 _height(0),
@@ -53,8 +55,8 @@ namespace ft {
 					Node *_left;
 					Node *_right;
 					Node *_parent;
-					entry _content;
-					size_type _height;
+					_entry _content;
+					_size_type _height;
 					short _balance_factor;
 			};
 
@@ -69,6 +71,10 @@ namespace ft {
 				return _balance(node);
 			}
 
+			// Balances *one* level of the subtree pointed by the parameter
+			// Subtrees must be updated before the function is called
+			// Returns the new updated top of the subtree, with both the forward and
+			//backward relations updated
 			Node * _balance(Node * node) {
 				// Left heavy subtree
 				if (node->_balance_factor == -2) {
@@ -94,9 +100,48 @@ namespace ft {
 				}
 				return node;
 			}
+
+			Node* _rotate_left(Node *A) {
+				Node *tmp = A->_right;
+				A->_right = tmp->_left;
+				if (tmp->_left != NULL)
+					tmp->_left->_parent = A;
+				tmp->_left = A;
+				tmp->_parent = A->_parent;
+				A->_parent = tmp;
+				if (tmp->_parent != NULL) {
+					if (tmp->_parent->_left == A)
+						tmp->_parent->_left = tmp;
+					else
+						tmp->_parent->_right = tmp;
+				}
+				_update(A);
+				_update(tmp);
+				return tmp;
+			}
+			Node* _rotate_right(Node *A) {
+				Node *tmp = A->_left;
+				A->_left = tmp->_right;
+				if (tmp->_right != NULL)
+					tmp->_right->_parent = A;
+				tmp->_right = A;
+				tmp->_parent = A->_parent;
+				A->_parent = tmp;
+				if (tmp->_parent != NULL) {
+					if (tmp->_parent->_left == A)
+						tmp->_parent->_left = tmp;
+					else
+						tmp->_parent->_right = tmp;
+				}
+				_update(A);
+				_update(tmp);
+				return tmp;
+			}
+
+			// Updates the height and balance factor of the node given by the parameter
 			void _update(Node * node) {
-				size_type left_height = 0;
-				size_type right_height = 0;
+				_size_type left_height = 0;
+				_size_type right_height = 0;
 				if (node->_left != NULL)
 					left_height = node->_left->_height;
 				if (node->_right != NULL)
@@ -107,37 +152,38 @@ namespace ft {
 				node->_balance_factor = right_height - left_height;
 			}
 
-			Node * _insert(Node * node, entry const & content, Compare const & comp) {
+			// Insert a copy of the entry into the subtree given as a parameter
+			// The function is recursive, and the balancing is done at each step
+			// The result is the new top of the subtree as given by the balance function
+			Node * _insert(Node * node, _entry const & content) {
+				// Case where the tree is empty
 				if (node == NULL)
 					return _make_node(content);
-				if (comp(content.first, node->_content.first)) {
+				// Case where the entry goes on the left child of the current node
+				if (_comp(content.first, node->_content.first)) {
+					// Case where the child is empty
 					if (node->_left == NULL) {
 						node->_left = _make_node(content);
 						node->_left->_parent = node;
 					}
+					// Case where the child is not empty
 					else
-						node->_left = _insert(node->_left, content, comp);
+						node->_left = _insert(node->_left, content);
 				}
+				// Case where the entry goes on the right child of the current node
 				else {
+					// Case where the child is empty
 					if (node->_right == NULL) {
 						node->_right = _make_node(content);
 						node->_right->_parent = node;
 					}
+					// Case where the child is not empty
 					else
-						node->_right = _insert(node->_right, content, comp);
+						node->_right = _insert(node->_right, content);
 				}
+				// Update and balance the tree as you go up the recursion
 				_update(node);
 				return _balance(node);
-			}
-
-			Node * _find(Node * node, const Key key, Compare const & comp) {
-				if (node == NULL)
-					return NULL;
-				if (node->_content.first == key)
-					return node;
-				if (comp(node->_content.first, key))
-					return _find(node->_right, key, comp);
-				return _find(node->_left, key, comp);
 			}
 
 			Node * _get_successor(Node *node) {
@@ -203,8 +249,13 @@ namespace ft {
 					_root = A;
 			}
 
-			Node * _remove(Node * node, Key const & key, Compare const & comp) {
-				Node * target = _find(node, key, comp);
+			// Remove the node given by the parameter
+			// The function is recursive and properly updates and balances the tree as
+			//it goes
+			// The result is the pointer to the top of the tree, which has been
+			//balanced and updated
+			Node * _remove(Node * node, Key const & key) {
+				Node * target = _find(node, key);
 				if (target == NULL)
 					return NULL;
 				Node * parent = target->_parent;
@@ -237,7 +288,7 @@ namespace ft {
 				else {
 					successor = _get_successor(target);
 					_exchange_nodes(target, successor);
-					successor = _remove(target, target->_content.first, comp);
+					successor = _remove(target, target->_content.first);
 				}
 				// Update and balance all the parents of the current node until
 				// the parent of the entry node is reached
@@ -250,43 +301,6 @@ namespace ft {
 				return node;
 			}
 
-			Node* _rotate_left(Node *A) {
-				Node *tmp = A->_right;
-				A->_right = tmp->_left;
-				if (tmp->_left != NULL)
-					tmp->_left->_parent = A;
-				tmp->_left = A;
-				tmp->_parent = A->_parent;
-				A->_parent = tmp;
-				if (tmp->_parent != NULL) {
-					if (tmp->_parent->_left == A)
-						tmp->_parent->_left = tmp;
-					else
-						tmp->_parent->_right = tmp;
-				}
-				_update(A);
-				_update(tmp);
-				return tmp;
-			}
-			Node* _rotate_right(Node *A) {
-				Node *tmp = A->_left;
-				A->_left = tmp->_right;
-				if (tmp->_right != NULL)
-					tmp->_right->_parent = A;
-				tmp->_right = A;
-				tmp->_parent = A->_parent;
-				A->_parent = tmp;
-				if (tmp->_parent != NULL) {
-					if (tmp->_parent->_left == A)
-						tmp->_parent->_left = tmp;
-					else
-						tmp->_parent->_right = tmp;
-				}
-				_update(A);
-				_update(tmp);
-				return tmp;
-			}
-
 			Node * _copy_node(Node const * other) {
 				if (other == NULL)
 					return NULL;
@@ -296,6 +310,18 @@ namespace ft {
 				res->_right = _copy_node(other->_right);
 				res->_balance_factor = other->_balance_factor;
 				res->_height = other->_height;
+				res->_parent = other->_parent;
+				return res;
+			}
+
+			Node * _find(Node * node, const Key key) {
+				if (node == NULL)
+					return NULL;
+				if (node->_content.first == key)
+					return node;
+				if (_comp(node->_content.first, key))
+					return _find(node->_right, key);
+				return _find(node->_left, key);
 			}
 
 			void _destroy_node(Node * node) {
@@ -307,7 +333,7 @@ namespace ft {
 				_alloc.deallocate(node, 1);
 			}
 
-			Node * _make_node(entry content) {
+			Node * _make_node(_entry content) {
 				Node node(content);
 				Node * res = _alloc.allocate(1);
 				_alloc.construct(res, node);
@@ -322,47 +348,48 @@ namespace ft {
 						_alloc(allocator_type()),
 						_comp(Compare()) {
 				_alloc = allocator_type();
-						}
-			AVL_tree(Compare & comp, Allocator & alloc): _root(NULL),
-														 _nb_of_nodes(0),
-														 _alloc(allocator_type()),
-														 _comp(comp) {}
+			}
+			AVL_tree(Compare const & comp, Allocator const & alloc): _root(NULL),
+																	 _nb_of_nodes(0),
+																	 _alloc(allocator_type()),
+																	 _comp(comp) {}
 			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root)),
 											  _nb_of_nodes(other._nb_of_nodes),
 											  _alloc(other._alloc),
-											  _comp(other.comp){}
+											  _comp(other._comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
 				_root = _copy_node(other._root);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
-				_comp = other.comp;
+				//_comp = other._comp;
+				return *this;
 			}
 
 			~AVL_tree() {
 				_destroy_node(_root);
 			}
 
-			Node * insert(entry const & content) {
-				if (_find(_root, content.first, _comp) != NULL)
+			Node * insert(_entry const & content) {
+				if (_find(_root, content.first) != NULL)
 					return NULL;
-				_root = _insert(_root, content, _comp);
+				_root = _insert(_root, content);
 				_nb_of_nodes++;
-				return _find(_root, content.key, _comp);
+				return _find(_root, content.first);
 			}
 
 			Node * find(Key const key) {
-				Node * res = _find(_root, key, _comp);
+				Node * res = _find(_root, key);
 				if (res != NULL)
 					return res;
 				return NULL;
 			}
 
 			void erase(Key const & key) {
-				_remove(_root, key, _comp);
+				_remove(_root, key);
 			}
 
-			void print_tree(Node * node, size_type depth) {
+			void print_tree(Node * node, _size_type depth) {
 				if (node == NULL)
 					return ;
 				if (node->_right != NULL)
@@ -385,7 +412,7 @@ namespace ft {
 			}
 
 			bool compare_nodes(Node * const node1, Node * const node2) {
-				return _comp (node1->_content.first, node2->_content.first);
+				return _comp(node1->_content.first, node2->_content.first);
 			}
 
 			Node* get_successor_iterator(Node * const current_node) const {
@@ -396,7 +423,7 @@ namespace ft {
 
 			}
 
-			size_type get_size() const { return _nb_of_nodes; }
+			_size_type get_size() const { return _nb_of_nodes; }
 			void clear() {
 				_nb_of_nodes = 0;
 				_destroy_node(_root);
@@ -445,11 +472,52 @@ namespace ft {
 				other._comp = tmp._comp;
 			}
 
+			// Returns a node pointer to a node containing a key greater than or equal 
+			//to the parameter
+			Node * lower_bound(const Key & key) {
+				Node * current_node;
+				Node * prev_node;
+
+				prev_node = NULL;
+				current_node = _root;
+				while (current_node != NULL) {
+					// Case where the node with the same key is found
+					if (current_node->_content.first == key)
+						return current_node;
+					prev_node = current_node;
+					// Case where the node might be found in the left child
+					if (_comp(key, current_node->_content.first))
+						current_node = current_node->_left;
+					// Case whire the node might be found in the right child
+					else
+						current_node = current_node->_right;
+				}
+				// Case where the node with the same key was not found, so the closest
+				//node with a greater key is selected
+				if (prev_node != NULL)
+					while (!_comp(key, prev_node->_content.first))
+						prev_node = prev_node->_parent;
+				return prev_node;
+			}
+
+			// Returns a node pointer to a node containing a key greater than the
+			//parameter
+			Node * upper_bound(const Key & key) {
+				Node * bound = lower_bound(key);
+				// If the key is found, the upper bound is the element following the
+				//lower bound
+				if (bound->_content.first == key)
+					return get_successor_iterator(bound);
+				// The upper bound is the same as the lower bound if the key is not
+				//found
+				return bound;
+			}
+
 		private:
 			Node *_root;
 			allocator_type _alloc;
-			size_type _nb_of_nodes;
-			Compare _comp;
+			_size_type _nb_of_nodes;
+			Compare const _comp;
 	};
 }
 
