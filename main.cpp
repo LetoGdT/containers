@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/12 18:07:25 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:53:03 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ int main() {
 	for (it = foo.begin() ; it != foo.end() ; ++it)
 		std::cout << (*it).second << std::endl;
 	std::cout << (it == foo.end()) << std::endl;
+	it++;
+	it++;
+	it++;
 	it++;
 	std::cout << (it == foo.end()) << std::endl;
 	return 0;

@@ -6,13 +6,14 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/12 17:32:21 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/13 23:10:30 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 # include <memory>
+# include <limits>
 # include <exception>
 # include "AVL_tree.hpp"
 
@@ -81,40 +82,70 @@ namespace ft {
 			~map();
 
 		//element access
-			reference at(const key_type& key) {
-				value_type *tmp = _tree.find(key);
+			mapped_type & at(const key_type& key) {
+				typename _tree_type::Node * tmp = _tree.find(key);
+				if (tmp == NULL)
+					throw std::out_of_range("ft::map: value not found");
+				return tmp->_content->second;
+			}
+			const mapped_type & at(const key_type& key) const {
+				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
 					throw std::out_of_range("ft::map: value not found");
 				return tmp->second;
 			}
-			const_reference at(const key_type& key) const {
-				value_type *tmp = _tree.find(key);
+			mapped_type & operator[](const key_type& key) {
+				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
-					throw std::out_of_range("ft::map: value not found");
-				return tmp->second;
-			}
-			reference operator[](const key_type& key) {
-				value_type *tmp = _tree.find(key);
-				if (tmp == NULL)
-					throw std::out_of_range("ft::map: value not found");
-				return tmp->second;
-			}
-			const_reference operator[](const key_type& key) const {
-				value_type *tmp = _tree.find(key);
-				if (tmp == NULL)
-					throw std::out_of_range("ft::map: value not found");
-				return tmp->second;
+					return _tree.insert(make_pair<key_type, mapped_type>(key, mapped_type()))->_content.second;
+				return tmp->_content->second;
 			}
 
 		//iterators
-			iterator begin();
-			iterator end();
-			const_iterator begin() const;
-			const_iterator end() const;
-			reverse_iterator rbegin();
-			reverse_iterator rend();
-			const_reverse_iterator rbegin() const;
-			const_reverse_iterator rend() const;
+			iterator begin() {
+				typename _tree_type::Node * node = _tree.get_leftmost();
+				iterator it(node, &_tree);
+				return it;
+			}
+			iterator end() {
+				typename _tree_type::Node * node = _tree.get_rightmost();
+				iterator it(node, &_tree);
+				++it;
+				return it;
+			}
+			const_iterator begin() const {
+				typename _tree_type::Node * node = _tree.get_leftmost();
+				const_iterator it(node, &_tree);
+				return it;
+			}
+			const_iterator end() const {
+				typename _tree_type::Node * node = _tree.get_rightmost();
+				const_iterator it(node, &_tree);
+				++it;
+				return it;
+			}
+			reverse_iterator rbegin() {
+				typename _tree_type::Node * node = _tree.get_rightmost();
+				reverse_iterator it(node, &_tree);
+				return it;
+			}
+			reverse_iterator rend() {
+				typename _tree_type::Node * node = _tree.get_leftmost();
+				reverse_iterator it(node, &_tree);
+				++it;
+				return it;
+			}
+			const_reverse_iterator rbegin() const {
+				typename _tree_type::Node * node = _tree.get_rightmost();
+				const_reverse_iterator it(node, &_tree);
+				return it;
+			}
+			const_reverse_iterator rend() const {
+				typename _tree_type::Node * node = _tree.get_leftmost();
+				const_reverse_iterator it(node, &_tree);
+				++it;
+				return it;
+			}
 
 		//capacity
 			bool empty() const { return _tree.get_size() == 0; }
@@ -125,21 +156,54 @@ namespace ft {
 			void clear() {
 				_tree.clear();
 			}
-			std::pair<iterator, bool> insert( const value_type& value );
-			iterator insert( iterator hint, const value_type& value );
+
+			std::pair<iterator, bool> insert(const value_type& value) {
+				typename _tree_type::Node* node = insert(value);
+				iterator iter(node, &_tree);
+				return make_pair<iterator, bool>(iter, node != NULL);
+			}
+			iterator insert(iterator hint, const value_type& value) {
+				return insert(value).first;
+			}
 			template< class InputIt >
-				void insert( InputIt first, InputIt last );
-			void erase( iterator pos );
-			void erase( iterator first, iterator last );
-			size_type erase( const Key& key );
-			void swap( map& other );
+			void insert(InputIt first, InputIt last) {
+				for (InputIt it = first ; it != last ; ++it)
+					insert(*it);
+			}
+
+			void erase(iterator pos) {
+				_tree.erase((*pos).first);
+			}
+			void erase(iterator first, iterator last) {
+				for (iterator it = first ; it != last ; ++it)
+					_tree.erase((*it).first);
+			}
+			size_type erase(const Key& key) {
+				size_type old_size = _tree.get_size();
+				_tree.erase(key);
+				return old_size != _tree.get_size();
+			}
+			void swap(map& other) {
+				_tree.swap(other._tree);
+			}
 
 		//lookup
-			size_type count( const Key& key ) const;
-			iterator find( const Key& key );
-			const_iterator find( const Key& key ) const;
-			std::pair<iterator,iterator> equal_range( const Key& key );
-			std::pair<const_iterator,const_iterator> equal_range( const Key& key ) const;
+			size_type count(const Key& key) const {
+				return (_tree.find(key) != NULL) ? 1 : 0;
+			}
+			iterator find(const Key& key) {
+				iterator it(_tree.find(key), _tree);
+				return it;
+			}
+			const_iterator find(const Key& key) const {
+				const_iterator it(_tree.find(key), _tree);
+				return it;
+			}
+
+			std::pair<iterator, iterator> equal_range(const Key& key) {
+				std::pair<iterator, iterator> res;
+			}
+			std::pair<const_iterator, const_iterator> equal_range(const Key& key) const;
 			iterator lower_bound( const Key& key );
 			const_iterator lower_bound( const Key& key ) const;
 			iterator upper_bound( const Key& key );

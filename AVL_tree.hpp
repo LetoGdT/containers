@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/11 16:13:33 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/13 22:39:00 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <memory>
 # include <algorithm>
 # include "pair.hpp"
+# include "map.hpp"
 #include <iostream>
 
 namespace ft {
@@ -25,9 +26,8 @@ namespace ft {
 		class Allocator>
 	class AVL_tree {
 		public:
-			typedef pair<Key, T> entry;
-			typedef std::size_t size_type;
-//			typedef typename map<Key, T, Compare, Allocator>::size_type size_type;
+			typedef pair<const Key, T> entry;
+			typedef typename ft::map<Key, T, Compare, Allocator>::size_type size_type;
 
 			class Node {
 				public:
@@ -54,11 +54,12 @@ namespace ft {
 					Node *_right;
 					Node *_parent;
 					entry _content;
-					std::size_t _height;
+					size_type _height;
 					short _balance_factor;
 			};
 
 		private:
+			typedef typename Allocator::template rebind<Node>::other allocator_type;
 			Node * _rec_balance(Node *node) {
 				if (node == NULL)
 					return NULL;
@@ -312,7 +313,6 @@ namespace ft {
 				_alloc.construct(res, node);
 				return res;
 			}
-			typedef typename Allocator::template rebind<Node>::other allocator_type;
 
 		// Fonctions de manipulation de l’arbre
 
@@ -326,9 +326,7 @@ namespace ft {
 			AVL_tree(Compare & comp, Allocator & alloc): _root(NULL),
 														 _nb_of_nodes(0),
 														 _alloc(allocator_type()),
-														 _comp(comp) {
-				_alloc = allocator_type();
-						}
+														 _comp(comp) {}
 			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root)),
 											  _nb_of_nodes(other._nb_of_nodes),
 											  _alloc(other._alloc),
@@ -345,17 +343,18 @@ namespace ft {
 				_destroy_node(_root);
 			}
 
-			void insert(entry const & content) {
+			Node * insert(entry const & content) {
 				if (_find(_root, content.first, _comp) != NULL)
-					return ;
+					return NULL;
 				_root = _insert(_root, content, _comp);
 				_nb_of_nodes++;
+				return _find(_root, content.key, _comp);
 			}
 
-			entry * find(Key const key) {
-				Node * tmp = _find(_root, key, _comp);
-				if (tmp != NULL)
-					return &tmp->_content;
+			Node * find(Key const key) {
+				Node * res = _find(_root, key, _comp);
+				if (res != NULL)
+					return res;
 				return NULL;
 			}
 
@@ -385,7 +384,15 @@ namespace ft {
 				print_tree(_root, 0);
 			}
 
+			bool compare_nodes(Node * const node1, Node * const node2) {
+				return _comp (node1->_content.first, node2->_content.first);
+			}
+
 			Node* get_successor_iterator(Node * const current_node) const {
+
+			}
+
+			Node* get_predecessor_iterator(Node * const current_node) const {
 
 			}
 
@@ -394,6 +401,48 @@ namespace ft {
 				_nb_of_nodes = 0;
 				_destroy_node(_root);
 				_root = NULL;
+			}
+
+			Node * get_leftmost() {
+				Node * res = _root;
+
+				if (res == NULL)
+					return NULL;
+				while (res->_left != NULL)
+					res = res->_left;
+				return res;
+			}
+
+			Node * get_rightmost() {
+				Node * res = _root;
+
+				if (res == NULL)
+					return NULL;
+				while (res->_right != NULL)
+					res = res->_right;
+				return res;
+			}
+
+			void swap(AVL_tree& other) {
+				AVL_tree tmp;
+
+				// Save the value of this
+				tmp._root = _root;
+				tmp._alloc = _alloc;
+				tmp._nb_of_nodes = _nb_of_nodes;
+				tmp._comp = _comp;
+
+				// Replace the value of this with the value of other
+				_root = other._root;
+				_alloc = other._alloc;
+				_nb_of_nodes = other._nb_of_nodes;
+				_comp = other._comp;
+
+				// Replace the value of other with the saved value of this
+				other._root = tmp._root;
+				other._alloc = tmp._alloc;
+				other._nb_of_nodes = tmp._nb_of_nodes;
+				other._comp = tmp._comp;
 			}
 
 		private:
