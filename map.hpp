@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/14 23:12:50 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/18 17:16:32 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,8 +236,8 @@ namespace ft {
 			}
 
 		//observers
-			key_compare key_comp() const;
-			Compare value_comp() const;
+			key_compare key_comp() const { return _tree.get_comp(); }
+			Compare value_comp() const { return _tree.get_entry_comp; }
 
 		//friends
 			friend bool operator==(map const & lhs, map const & rhs);

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/14 23:07:31 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/18 17:16:21 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,6 +340,26 @@ namespace ft {
 				return res;
 			}
 
+			Node * _get_leftmost(Node * node) const {
+				if (node == NULL)
+					return NULL;
+				while (node->_left != NULL)
+					node = node->_left;
+				return node;
+			}
+
+			Node * _get_rightmost(Node * node) const {
+				if (node == NULL)
+					return NULL;
+				while (node->_left != NULL)
+					node = node->_left;
+				return node;
+			}
+
+			Compare _comp_entries(_entry const & e1, _entry const & e2) {
+				return _comp(e1.first, e2.first);
+			}
+
 		// Fonctions de manipulation de l’arbre
 
 		public:
@@ -415,12 +435,26 @@ namespace ft {
 				return _comp(node1->_content.first, node2->_content.first);
 			}
 
-			Node* get_successor_iterator(Node * const current_node) const {
-
+			Node * get_successor_iterator(Node * const current_node) const {
+				if (current_node == NULL)
+					return NULL;
+				Node * res = _get_leftmost(current_node->_right);
+				if (res == NULL)
+					res = current_node->_parent;
+				while (res != NULL && compare_nodes(res, current_node))
+					res = res->_parent;
+				return res;
 			}
 
 			Node* get_predecessor_iterator(Node * const current_node) const {
-
+				if (current_node == NULL)
+					return NULL;
+				Node * res = _get_rightmost(current_node->_left);
+				if (res == NULL)
+					res = current_node->_parent;
+				while (res != NULL && compare_nodes(res, current_node))
+					res = res->_parent;
+				return res;
 			}
 
 			_size_type get_size() const { return _nb_of_nodes; }
@@ -431,23 +465,11 @@ namespace ft {
 			}
 
 			Node * get_leftmost() {
-				Node * res = _root;
-
-				if (res == NULL)
-					return NULL;
-				while (res->_left != NULL)
-					res = res->_left;
-				return res;
+				return _get_leftmost(_root);
 			}
 
 			Node * get_rightmost() {
-				Node * res = _root;
-
-				if (res == NULL)
-					return NULL;
-				while (res->_right != NULL)
-					res = res->_right;
-				return res;
+				return _get_rightmost(_root);
 			}
 
 			void swap(AVL_tree& other) {
@@ -512,6 +534,9 @@ namespace ft {
 				//found
 				return bound;
 			}
+
+			Compare get_comp() const { return _comp; }
+			Compare get_entry_comp() const { return _comp_entries; }
 
 		private:
 			Node *_root;
