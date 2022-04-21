@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/08 20:37:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:03:37 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,12 +364,12 @@ namespace ft {
 				_size += count;
 				return iterator(_data + n);
 			}
-			inline static bool _value_operator_equ(value_type a, value_type b) { return a == b; }
-			inline static bool _value_operator_diff(value_type a, value_type b) { return a != b; }
-			inline static bool _value_operator_less(value_type a, value_type b) { return a < b; }
-			inline static bool _value_operator_less_equ(value_type a, value_type b) { return a <= b; }
-			inline static bool _value_operator_more(value_type a, value_type b) { return a > b; }
-			inline static bool _value_operator_more_equ(value_type a, value_type b) { return a >= b; }
+			inline static bool _value_operator_equ(const value_type a, const value_type b) { return a == b; }
+			inline static bool _value_operator_diff(const value_type a, const value_type b) { return a != b; }
+			inline static bool _value_operator_less(const value_type a, const value_type b) { return a < b; }
+			inline static bool _value_operator_less_equ(const value_type a, const value_type b) { return a <= b; }
+			inline static bool _value_operator_more(const value_type a, const value_type b) { return a > b; }
+			inline static bool _value_operator_more_equ(const value_type a, const value_type b) { return a >= b; }
 	};
 }
 

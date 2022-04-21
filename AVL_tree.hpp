@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/18 17:16:21 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/21 20:03:02 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -537,6 +537,20 @@ namespace ft {
 
 			Compare get_comp() const { return _comp; }
 			Compare get_entry_comp() const { return _comp_entries; }
+
+			inline static bool value_operator_equ(const _entry a, const _entry b) { return a.first == b.first; }
+			inline static bool value_operator_diff(const _entry a, const _entry b) { return a.first != b.first; }
+			inline static bool value_operator_less(const _entry a, const _entry b) { return a.first < b.first; }
+			inline static bool value_operator_less_equ(const _entry a, const _entry b) { return a <= b; }
+			inline static bool value_operator_more(const _entry a, const _entry b) { return a > b; }
+			inline static bool value_operator_more_equ(const _entry a, const _entry b) { return a >= b; }
+
+			friend bool operator==(_entry const & lhs, _entry const & rhs) { return lhs.first == rhs.first; }
+			friend bool operator!=(_entry const & lhs, _entry const & rhs) { return lhs.first != rhs.first; }
+			friend bool operator<(_entry const & lhs, _entry const & rhs) { return rhs._comp(lhs.first, rhs.first); }
+			friend bool operator<=(_entry const & lhs, _entry const & rhs) { return lhs == rhs || rhs._comp(lhs.first, rhs.first); }
+			friend bool operator>=(_entry const & lhs, _entry const & rhs) { return !lhs._comp(lhs.first, rhs.first); }
+			friend bool operator>(_entry const & lhs, _entry const & rhs) { return lhs != rhs && !rhs._comp(rhs.first, lhs.first); }
 
 		private:
 			Node *_root;

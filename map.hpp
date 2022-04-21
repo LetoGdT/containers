@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/18 17:16:32 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/21 20:34:49 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,45 +105,45 @@ namespace ft {
 
 		//iterators
 			iterator begin() {
-				typename _tree_type::Node * node = _tree.get_leftmost();
+				_Node * node = _tree.get_leftmost();
 				iterator it(node, &_tree);
 				return it;
 			}
 			iterator end() {
-				typename _tree_type::Node * node = _tree.get_rightmost();
+				_Node * node = _tree.get_rightmost();
 				iterator it(node, &_tree);
 				++it;
 				return it;
 			}
 			const_iterator begin() const {
-				typename _tree_type::Node * node = _tree.get_leftmost();
+				_Node * node = _tree.get_leftmost();
 				const_iterator it(node, &_tree);
 				return it;
 			}
 			const_iterator end() const {
-				typename _tree_type::Node * node = _tree.get_rightmost();
+				_Node * node = _tree.get_rightmost();
 				const_iterator it(node, &_tree);
 				++it;
 				return it;
 			}
 			reverse_iterator rbegin() {
-				typename _tree_type::Node * node = _tree.get_rightmost();
+				_Node * node = _tree.get_rightmost();
 				reverse_iterator it(node, &_tree);
 				return it;
 			}
 			reverse_iterator rend() {
-				typename _tree_type::Node * node = _tree.get_leftmost();
+				_Node * node = _tree.get_leftmost();
 				reverse_iterator it(node, &_tree);
 				++it;
 				return it;
 			}
 			const_reverse_iterator rbegin() const {
-				typename _tree_type::Node * node = _tree.get_rightmost();
+				_Node * node = _tree.get_rightmost();
 				const_reverse_iterator it(node, &_tree);
 				return it;
 			}
 			const_reverse_iterator rend() const {
-				typename _tree_type::Node * node = _tree.get_leftmost();
+				_Node * node = _tree.get_leftmost();
 				const_reverse_iterator it(node, &_tree);
 				++it;
 				return it;
@@ -160,7 +160,7 @@ namespace ft {
 			}
 
 			ft::pair<iterator, bool> insert(const value_type& value) {
-				typename _tree_type::Node* node = _tree.insert(value);
+				_Node * node = _tree.insert(value);
 				iterator iter(node, &_tree);
 				return ft::make_pair(iter, node != NULL);
 			}
@@ -240,14 +240,39 @@ namespace ft {
 			Compare value_comp() const { return _tree.get_entry_comp; }
 
 		//friends
-			friend bool operator==(map const & lhs, map const & rhs);
-			friend bool operator!=(map const & lhs, map const & rhs);
-			friend bool operator<(map const & lhs, map const & rhs);
-			friend bool operator<=(map const & lhs, map const & rhs);
-			friend bool operator>(map const & lhs, map const & rhs);
-			friend bool operator>=(map const & lhs, map const & rhs);
-			friend void swap(value_type& lhs, 
-							 value_type& rhs );
+			friend bool operator==(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_equ);
+			}
+			friend bool operator!=(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_diff);
+			}
+			friend bool operator<(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_less);
+			}
+			friend bool operator<=(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_less_equ);
+			}
+			friend bool operator>(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_more);
+			}
+			friend bool operator>=(map const & lhs, map const & rhs) {
+				return lexicographical_compare(lhs.begin(), lhs.end(),
+											   rhs.begin(), rhs.end(),
+											   lhs.value_operator_more_equ);
+			}
+			friend void swap(value_type& lhs, value_type& rhs) {
+				lhs.swap(rhs);
+			}
 
 		private:
 			_tree_type _tree;
