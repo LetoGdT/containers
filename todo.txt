@@ -1,6 +1,4 @@
-iterator traits
 reverse_iterator
 operateurs de comparaison avec des consts 
 makefile
-map_iter
 tests

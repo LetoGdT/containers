@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/21 20:03:37 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/22 17:45:49 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,9 +373,8 @@ namespace ft {
 	};
 }
 
-# include "IteratorTraits.hpp"
-# include "vector_it/iterator.hpp"
-# include "vector_it/reverse_iterator.hpp"
-# include "vector_it/const_reverse_iterator.hpp"
-# include "vector_it/const_iterator.hpp"
+# include "vector_iterator.hpp"
+//# include "vector_it/reverse_iterator.hpp"
+//# include "vector_it/const_reverse_iterator.hpp"
+//# include "vector_it/const_iterator.hpp"
 #endif

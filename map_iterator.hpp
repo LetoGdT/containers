@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iterator.hpp                                       :+:      :+:    :+:   */
+/*   map_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/14 23:05:57 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/22 18:05:01 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
-# include "../IteratorTraits.hpp"
-# include "../map.hpp"
+# include "iterator.hpp"
+# include "map.hpp"
 
 namespace ft{
 	template<typename Key,
 			 typename T,
 			 typename Compare,
 			 typename Allocator>
-	class MapIter {
+	class MapIter: iterator<BidirectionalIteratorTag,
+			 				ft::pair<const Key, T> >{
 		private:
 			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
 			typedef typename ft::map<Key, T, Compare, Allocator> _map_type;

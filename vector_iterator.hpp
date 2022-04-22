@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iterator.hpp                                       :+:      :+:    :+:   */
+/*   vector_iterator.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/03/08 18:57:21 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/22 18:34:25 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
-# include "../vector.hpp"
-# include "../IteratorTraits.hpp"
+# include "iterator.hpp"
+# include "vector.hpp"
 
 /****************************************
  * Les itérateurs contiennent juste un pointeur sur la _data du vecteur, 
@@ -22,7 +22,7 @@
 
 namespace ft{
 	template<typename T>
-	class VectorIter {
+	class VectorIter: iterator<BidirectionalIteratorTag, T> {
 		public:
 			typedef typename ft::vector<T>::difference_type difference_type;
 			typedef typename ft::vector<T>::value_type value_type;
