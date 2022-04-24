@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 17:47:28 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 21:02:37 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace ft{
 			 typename Pointer,
 			 typename Reference,
 			 typename Category>
-	class MapIter: iterator<Category, T>{
+	class MapIter: public ft::iterator<Category, T, std::ptrdiff_t, Pointer, Reference>{
 		private:
 			typedef AVL_tree<typename T::first_type, typename T::second_type, Compare, Allocator> _tree_type;
 			typedef typename ft::map<typename T::first_type, typename T::second_type, Compare, Allocator> _map_type;

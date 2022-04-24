@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 17:51:30 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 21:02:37 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,12 @@
 # include <cstring>
 # include "is_integral.hpp"
 # include "lexicographical_compare.hpp"
-# include "iterator.hpp"
+# include "vector_iterator.hpp"
 # include "reverse_iterator.hpp"
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
 
 namespace ft {
-	template<typename T,
-			 typename Pointer = T*,
-			 typename Reference = T&,
-			 typename Category = BidirectionalIteratorTag>
-	class VectorIter;
-
 	template<typename T,
 			 class Allocator = std::allocator<T> >
 	class vector {
@@ -42,8 +36,8 @@ namespace ft {
 			typedef const T& const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			typedef VectorIter<T> iterator;
-			typedef VectorIter<T, const T*, const T&> const_iterator;
+			typedef VectorIter<T, difference_type> iterator;
+			typedef VectorIter<T, difference_type, const T*, const T&> const_iterator;
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -370,5 +364,4 @@ namespace ft {
 	};
 }
 
-# include "vector_iterator.hpp"
 #endif

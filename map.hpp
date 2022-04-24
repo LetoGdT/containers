@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 17:51:00 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 20:53:02 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ namespace ft {
 			 typename Allocator,
 			 typename Pointer = T*,
 			 typename Reference = T&,
-			 typename Category = BidirectionalIteratorTag>
+			 typename Category = std::random_access_iterator_tag>
 	class MapIter;
 
 	template<

@@ -6,22 +6,19 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/14 22:21:09 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:20:54 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "map.hpp"
+#include "vector.hpp"
 #include "pair.hpp"
 #include <iostream>
 
 int main() {
-	ft::map<int, const char *> m;
-	m.insert(ft::make_pair(0, "zero"));
-	m.insert(ft::make_pair(1, "one"));
-	m.insert(ft::make_pair(3, "two"));
+	ft::vector<int> v(50, 42);
 
-	std::cout << m.lower_bound(2)->second << std::endl;
-	std::cout << m.upper_bound(2)->second << std::endl;
+	for (ft::vector<int>::iterator it = v.begin() ; it != v.end() ; it++)
+		std::cout << *it << std::endl;
 	return 0;
 }
 
