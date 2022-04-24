@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 17:50:28 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 22:51:36 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,14 @@
 
 namespace ft {
 	template <
-		class Key,
 		class T,
 		class Compare,
 		class Allocator>
 	class AVL_tree {
 		private:
-			/*
-			typedef typename ft::map<Key, T, Compare, Allocator>::value_type _entry;
-			typedef typename ft::map<Key, T, Compare, Allocator>::size_type _size_type;
-			*/
-			typedef typename ft::pair<const Key, T> _entry;
+			typedef T _value_type;
+			typedef typename T::first_type _Key;
+			typedef typename T::second_type _mapped_type;
 			typedef typename std::size_t _size_type;
 		public:
 
@@ -39,24 +36,24 @@ namespace ft {
 							_parent(NULL),
 							_height(0),
 							_balance_factor(0) {}
-					Node(_entry content): _left(NULL),
+					Node(_value_type content): _left(NULL),
 										 _right(NULL),
 										 _parent(NULL),
+										 _content(content),
 										 _height(0),
-										 _balance_factor(0),
-										 _content(content) {}
+										 _balance_factor(0) {}
 					Node(Node const & other): _left(other._left),
                                               _right(other._right),
                                               _parent(other._parent),
+                                              _content(other._content),
                                               _height(other._height),
-                                              _balance_factor(other._balance_factor),
-                                              _content(other._content) {}
+                                              _balance_factor(other._balance_factor) {}
 					~Node() {}
 
 					Node *_left;
 					Node *_right;
 					Node *_parent;
-					_entry _content;
+					_value_type _content;
 					_size_type _height;
 					short _balance_factor;
 			};
@@ -156,7 +153,7 @@ namespace ft {
 			// Insert a copy of the entry into the subtree given as a parameter
 			// The function is recursive, and the balancing is done at each step
 			// The result is the new top of the subtree as given by the balance function
-			Node * _insert(Node * node, _entry const & content) {
+			Node * _insert(Node * node, _value_type const & content) {
 				// Case where the tree is empty
 				if (node == NULL)
 					return _make_node(content);
@@ -255,7 +252,7 @@ namespace ft {
 			//it goes
 			// The result is the pointer to the top of the tree, which has been
 			//balanced and updated
-			Node * _remove(Node * node, Key const & key) {
+			Node * _remove(Node * node, _Key & key) {
 				Node * target = _find(node, key);
 				if (target == NULL)
 					return NULL;
@@ -315,7 +312,7 @@ namespace ft {
 				return res;
 			}
 
-			Node * _find(Node * node, const Key key) {
+			Node * _find(Node * node, _Key key) {
 				if (node == NULL)
 					return NULL;
 				if (node->_content.first == key)
@@ -334,7 +331,7 @@ namespace ft {
 				_alloc.deallocate(node, 1);
 			}
 
-			Node * _make_node(_entry content) {
+			Node * _make_node(_value_type content) {
 				Node node(content);
 				Node * res = _alloc.allocate(1);
 				_alloc.construct(res, node);
@@ -357,7 +354,7 @@ namespace ft {
 				return node;
 			}
 
-			Compare _comp_entries(_entry const & e1, _entry const & e2) {
+			Compare _comp_values(_value_type const & e1, _value_type const & e2) {
 				return _comp(e1.first, e2.first);
 			}
 
@@ -371,12 +368,14 @@ namespace ft {
 				_alloc = allocator_type();
 			}
 			AVL_tree(Compare const & comp, Allocator const & alloc): _root(NULL),
-																	 _nb_of_nodes(0),
 																	 _alloc(allocator_type()),
-																	 _comp(comp) {}
+																	 _nb_of_nodes(0),
+																	 _comp(comp) {
+				(void)alloc;
+			}
 			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root)),
-											  _nb_of_nodes(other._nb_of_nodes),
 											  _alloc(other._alloc),
+											  _nb_of_nodes(other._nb_of_nodes),
 											  _comp(other._comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
@@ -391,7 +390,7 @@ namespace ft {
 				_destroy_node(_root);
 			}
 
-			Node * insert(_entry const & content) {
+			Node * insert(_value_type const & content) {
 				if (_find(_root, content.first) != NULL)
 					return NULL;
 				_root = _insert(_root, content);
@@ -399,14 +398,14 @@ namespace ft {
 				return _find(_root, content.first);
 			}
 
-			Node * find(Key const key) {
+			Node * find(_Key key) {
 				Node * res = _find(_root, key);
 				if (res != NULL)
 					return res;
 				return NULL;
 			}
 
-			void erase(Key const & key) {
+			void erase(_Key & key) {
 				_remove(_root, key);
 			}
 
@@ -475,7 +474,7 @@ namespace ft {
 
 			// Returns a node pointer to a node containing a key greater than or equal 
 			//to the parameter
-			Node * lower_bound(const Key & key) {
+			Node * lower_bound(_Key & key) {
 				Node * current_node;
 				Node * prev_node;
 
@@ -503,7 +502,7 @@ namespace ft {
 
 			// Returns a node pointer to a node containing a key greater than the
 			//parameter
-			Node * upper_bound(const Key & key) {
+			Node * upper_bound(_Key & key) {
 				Node * bound = lower_bound(key);
 				// If the key is found, the upper bound is the element following the
 				//lower bound
@@ -515,21 +514,14 @@ namespace ft {
 			}
 
 			Compare get_comp() const { return _comp; }
-			Compare get_entry_comp() const { return _comp_entries; }
+			Compare get_value_comp() const { return _comp_values; }
 
-			inline static bool value_operator_equ(const _entry a, const _entry b) { return a.first == b.first; }
-			inline static bool value_operator_diff(const _entry a, const _entry b) { return a.first != b.first; }
-			inline static bool value_operator_less(const _entry a, const _entry b) { return a.first < b.first; }
-			inline static bool value_operator_less_equ(const _entry a, const _entry b) { return a <= b; }
-			inline static bool value_operator_more(const _entry a, const _entry b) { return a > b; }
-			inline static bool value_operator_more_equ(const _entry a, const _entry b) { return a >= b; }
-
-			friend bool operator==(_entry const & lhs, _entry const & rhs) { return lhs.first == rhs.first; }
-			friend bool operator!=(_entry const & lhs, _entry const & rhs) { return lhs.first != rhs.first; }
-			friend bool operator<(_entry const & lhs, _entry const & rhs) { return rhs._comp(lhs.first, rhs.first); }
-			friend bool operator<=(_entry const & lhs, _entry const & rhs) { return lhs == rhs || rhs._comp(lhs.first, rhs.first); }
-			friend bool operator>=(_entry const & lhs, _entry const & rhs) { return !lhs._comp(lhs.first, rhs.first); }
-			friend bool operator>(_entry const & lhs, _entry const & rhs) { return lhs != rhs && !rhs._comp(rhs.first, lhs.first); }
+			inline bool value_operator_equ(const _value_type a, const _value_type b) { return a.first == b.first; }
+			inline bool value_operator_diff(const _value_type a, const _value_type b) { return a.first != b.first; }
+			inline bool value_operator_less(const _value_type a, const _value_type b) { return _comp(a.first, b.first); }
+			inline bool value_operator_less_equ(const _value_type a, const _value_type b) { return !_comp(b.first, a.first); }
+			inline bool value_operator_more(const _value_type a, const _value_type b) { return _comp(b.first, a.first); }
+			inline bool value_operator_more_equ(const _value_type a, const _value_type b) { return !_comp(a.first, b.first); }
 
 		private:
 			Node *_root;

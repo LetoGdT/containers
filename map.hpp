@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:09:00 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 22:47:41 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft {
 		class Allocator = std::allocator<ft::pair<const Key, T> > >
 	class map {
 		private:
-			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
+			typedef AVL_tree<ft::pair<const Key, T>, Compare, Allocator> _tree_type;
 			typedef typename _tree_type::Node _Node;
 		public:
 			typedef Key key_type;
@@ -47,7 +47,7 @@ namespace ft {
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-			map(): map(Compare(), Allocator()) {}
+			map(): _tree(_tree_type(Compare(), Allocator())) {}
 			explicit map(Compare const & comp, const Allocator& alloc = Allocator()) {
 				_tree = _tree_type(comp, alloc);
 			}
@@ -146,6 +146,7 @@ namespace ft {
 				return ft::make_pair(iter, node != NULL);
 			}
 			iterator insert(iterator hint, const value_type& value) {
+				(void)hint;
 				return insert(value).first;
 			}
 			template< class InputIt >
@@ -218,7 +219,7 @@ namespace ft {
 
 		//observers
 			key_compare key_comp() const { return _tree.get_comp(); }
-			Compare value_comp() const { return _tree.get_entry_comp; }
+			Compare value_comp() const { return _tree.get_value_comp; }
 
 		//friends
 			friend bool operator==(map const & lhs, map const & rhs) {

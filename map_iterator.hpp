@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:08:46 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 23:02:20 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft{
 			 typename Category = std::random_access_iterator_tag>
 	class MapIter: public ft::iterator<Category, T, Distance, Pointer, Reference>{
 		private:
-			typedef AVL_tree<typename T::first_type, typename T::second_type, Compare, Allocator> _tree_type;
+			typedef AVL_tree<T, Compare, Allocator> _tree_type;
 			typedef typename _tree_type::Node _Node;
 
 		public:
@@ -35,33 +35,28 @@ namespace ft{
 			typedef Reference reference;
 			typedef Category iterator_category;
 
-			MapIter(): MapIter(NULL, NULL) {}
+			MapIter(): _data(NULL), _tree(NULL), _is_end(false) {}
 			MapIter(_Node * data, _tree_type * const tree): _data(data),
-																  _is_end(false),
-																  _tree(tree) {
+														    _tree(tree),
+														    _is_end(false) {
 				if (!data || !tree)
 					_is_end = true;
 			}
 			MapIter(const MapIter & other): _data(other._data),
-											_is_end(other._is_end),
-											_tree(other._tree) {}
-			template<class U, class V, class X, class Y>
-			MapIter(const MapIter<U, V, X, Y> & other): _data(other._data),
-														_is_end(other._is_end),
-														_tree(other._tree) {}
+											_tree(other._tree),
+											_is_end(other._is_end) {}
+			template<class U, class V, class X>
+			MapIter(const MapIter<U, V, X> & other) {
+				_data = other.get_data();
+				_tree = other.get_tree();
+				_is_end = other.get_is_end();
+			}
 			MapIter & operator=(MapIter const & other) {
 				_data = other._data;
 				_is_end = other._is_end;
 				return *this;
 			}
 			~MapIter() {}
-
-			friend bool operator==(const MapIter & lhs, const MapIter & rhs) {return lhs._data.first == rhs._data.first; }
-			friend bool operator!=(const MapIter & lhs, const MapIter & rhs) { return !(lhs==rhs); }
-			friend bool operator<(const MapIter & lhs, const MapIter & rhs) { return lhs._tree->compare_nodes(lhs._data, rhs._data); }
-			friend bool operator>(const MapIter & lhs, const MapIter & rhs) { return rhs < lhs; }
-			friend bool operator<=(const MapIter & lhs, const MapIter & rhs) { return !(rhs < lhs); }
-			friend bool operator>=(const MapIter & lhs, const MapIter & rhs) { return !(lhs < rhs); }
 
 			friend MapIter operator+(const MapIter & it, difference_type n) {
 				MapIter iter(it);
@@ -74,13 +69,6 @@ namespace ft{
 			friend MapIter operator-(const MapIter & it, difference_type n) {
 				MapIter iter(it);
 				return iter -= n;
-			}
-			friend difference_type operator-(const MapIter & lhs, const MapIter & rhs) {
-				difference_type res;
-				MapIter it(rhs);
-				for (res = 0 ; it != lhs && it._is_end == false ; it++)
-					res++;
-				return res;
 			}
 
 			MapIter & operator++() {
@@ -141,11 +129,48 @@ namespace ft{
 				return *(iter + n);
 			}
 
+			_Node * get_data() const { return _data; }
+			_tree_type * get_tree() const { return _tree; }
+			bool get_is_end() const { return _is_end; }
+
 		private:
 			_Node*		_data;
 			_tree_type*	_tree;
 			bool		_is_end;
 	};
+	template<typename IteratorL, typename IteratorR>
+	bool operator==(const IteratorL & lhs, const IteratorR & rhs) {
+		return lhs.get_data().first == rhs.get_data().first;
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator!=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(lhs==rhs);
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator<(const IteratorL & lhs, const IteratorR & rhs) {
+		return lhs.get_tree()->compare_nodes(lhs.get_data(), rhs.get_data());
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator>(const IteratorL & lhs, const IteratorR & rhs) {
+		return rhs < lhs;
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator<=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(rhs < lhs);
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator>=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(lhs < rhs);
+	}
+	
+	template<typename IteratorL, typename IteratorR>
+	typename IteratorL::difference_type operator-(const IteratorL & lhs, const IteratorR & rhs) {
+		typename IteratorL::difference_type res;
+		IteratorR it(rhs);
+		for (res = 0 ; it != lhs && it._is_end == false ; it++)
+			res++;
+		return res;
+	}
 }
 
 #endif

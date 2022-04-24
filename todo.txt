@@ -1,4 +1,3 @@
-operateurs de comparaison avec des consts 
-enable_if pour map
+operateurs de comparaison avec des consts (mettre les opérateurs en dehors des classes)
 makefile
 tests

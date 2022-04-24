@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:02:37 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 23:05:10 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,33 +38,13 @@ namespace ft{
 			VectorIter(pointer data): _data(data) {}
 			VectorIter(const VectorIter & other): _data(other._data) {}
 			template<class U>
-			VectorIter(const VectorIter<U> & other): _data(other._data) {}
+			VectorIter(const VectorIter<U> & other) { _data = other.get_data(); }
 			VectorIter & operator=(VectorIter const & other) {
 				_data = other._data;
 				return *this;
 			}
 			~VectorIter() {}
 
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator==(const IteratorL & lhs, const IteratorR & rhs) {return lhs._data == rhs._data; }
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator!=(const IteratorL & lhs, const IteratorR & rhs) { return !(lhs==rhs); }
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator<(const IteratorL & lhs, const IteratorR & rhs) { return lhs._data < rhs._data; }
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator>(const IteratorL & lhs, const IteratorR & rhs) { return rhs._data < lhs._data; }
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator<=(const IteratorL & lhs, const IteratorR & rhs) { return !(rhs._data < lhs._data); }
-			template<typename IteratorL, typename IteratorR>
-			friend bool operator>=(const IteratorL & lhs, const IteratorR & rhs) { return !(lhs._data < rhs._data); }
-
-			template<typename IteratorL, typename IteratorR>
-			friend difference_type operator-(const IteratorL & lhs, const IteratorR & rhs) { return lhs._data - rhs._data; }
-			friend VectorIter operator+(const VectorIter & it, difference_type n) {
-				VectorIter iter(*it);
-				iter._data += n;
-				return iter;
-			}
 			friend VectorIter operator+(difference_type n, const VectorIter & it) {
 				VectorIter iter(*it);
 				iter._data += n;
@@ -73,6 +53,12 @@ namespace ft{
 			friend VectorIter operator-(const VectorIter & it, difference_type n) {
 				VectorIter iter(*it);
 				iter._data -= n;
+				return iter;
+			}
+
+			friend VectorIter operator+(const VectorIter & it, difference_type n) {
+				VectorIter iter(*it);
+				iter._data += n;
 				return iter;
 			}
 
@@ -111,8 +97,40 @@ namespace ft{
 				_data -= n;
 				return *this;
 			}
+
+			pointer get_data() const { return _data; }
+
 		private:
 			pointer _data;
 	};
+	template<typename IteratorL, typename IteratorR>
+	bool operator==(const IteratorL & lhs, const IteratorR & rhs) {
+		return lhs._data == rhs._data;
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator!=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(lhs==rhs);
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator<(const IteratorL & lhs, const IteratorR & rhs) {
+		return lhs.get_data() < rhs.get_data();
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator>(const IteratorL & lhs, const IteratorR & rhs) {
+		return rhs._data < lhs._data;
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator<=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(rhs._data < lhs._data);
+	}
+	template<typename IteratorL, typename IteratorR>
+	bool operator>=(const IteratorL & lhs, const IteratorR & rhs) {
+		return !(lhs._data < rhs._data);
+	}
+
+	template<typename IteratorL, typename IteratorR>
+	typename IteratorL::difference_type operator-(const IteratorL & lhs, const IteratorR & rhs) {
+		return lhs.get_data() - rhs.get_data();
+	}
 }
 #endif
