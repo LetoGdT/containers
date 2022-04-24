@@ -6,33 +6,33 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/22 18:05:01 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 17:47:28 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
-# include "iterator.hpp"
 # include "map.hpp"
 
 namespace ft{
-	template<typename Key,
-			 typename T,
+	template<typename T,
 			 typename Compare,
-			 typename Allocator>
-	class MapIter: iterator<BidirectionalIteratorTag,
-			 				ft::pair<const Key, T> >{
+			 typename Allocator,
+			 typename Pointer,
+			 typename Reference,
+			 typename Category>
+	class MapIter: iterator<Category, T>{
 		private:
-			typedef AVL_tree<Key, T, Compare, Allocator> _tree_type;
-			typedef typename ft::map<Key, T, Compare, Allocator> _map_type;
+			typedef AVL_tree<typename T::first_type, typename T::second_type, Compare, Allocator> _tree_type;
+			typedef typename ft::map<typename T::first_type, typename T::second_type, Compare, Allocator> _map_type;
 			typedef typename _tree_type::Node _Node;
 
 		public:
 			typedef typename _map_type::difference_type difference_type;
-			typedef typename _map_type::value_type value_type;
-			typedef typename _map_type::pointer pointer;
-			typedef typename _map_type::reference reference;
-			typedef std::random_access_iterator_tag iterator_category;
+			typedef T value_type;
+			typedef Pointer pointer;
+			typedef Reference reference;
+			typedef Category iterator_category;
 
 			MapIter(): MapIter(NULL, NULL) {}
 			MapIter(_Node * data, _tree_type * const tree): _data(data),
@@ -44,6 +44,10 @@ namespace ft{
 			MapIter(const MapIter & other): _data(other._data),
 											_is_end(other._is_end),
 											_tree(other._tree) {}
+			template<class U, class V, class X, class Y>
+			MapIter(const MapIter<U, V, X, Y> & other): _data(other._data),
+														_is_end(other._is_end),
+														_tree(other._tree) {}
 			MapIter & operator=(MapIter const & other) {
 				_data = other._data;
 				_is_end = other._is_end;
@@ -54,8 +58,8 @@ namespace ft{
 			friend bool operator==(const MapIter & lhs, const MapIter & rhs) {return lhs._data.first == rhs._data.first; }
 			friend bool operator!=(const MapIter & lhs, const MapIter & rhs) { return !(lhs==rhs); }
 			friend bool operator<(const MapIter & lhs, const MapIter & rhs) { return lhs._tree->compare_nodes(lhs._data, rhs._data); }
-			friend bool operator>(const MapIter & lhs, const MapIter & rhs) { return (lhs >= rhs) && (lhs != rhs); }
-			friend bool operator<=(const MapIter & lhs, const MapIter & rhs) { return lhs < rhs || lhs == rhs; }
+			friend bool operator>(const MapIter & lhs, const MapIter & rhs) { return rhs < lhs; }
+			friend bool operator<=(const MapIter & lhs, const MapIter & rhs) { return !(rhs < lhs); }
 			friend bool operator>=(const MapIter & lhs, const MapIter & rhs) { return !(lhs < rhs); }
 
 			friend MapIter operator+(const MapIter & it, difference_type n) {
@@ -125,10 +129,8 @@ namespace ft{
 				return (*this) += -n;
 			}
 
-			reference operator*() { return _data->content; }
-			const reference operator*() const { return _data->content; }
-			pointer operator->() { return &(_data->_content); }
-			const pointer operator->() const { return &(_data->content); }
+			reference operator*() const { return _data->content; }
+			pointer operator->() const { return &(_data->_content); }
 			reference operator[](difference_type n) {
 				MapIter iter(*this);
 				return *(iter + n);

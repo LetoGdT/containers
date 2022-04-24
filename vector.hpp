@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/22 17:45:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 17:51:30 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,20 @@
 # include <cstring>
 # include "is_integral.hpp"
 # include "lexicographical_compare.hpp"
+# include "iterator.hpp"
+# include "reverse_iterator.hpp"
 # define _MEMORY_ALLOWANCE 2
 # define _INITIAL_CAPACITY 10
-# include <iostream>
 
 namespace ft {
-	template<typename T>
+	template<typename T,
+			 typename Pointer = T*,
+			 typename Reference = T&,
+			 typename Category = BidirectionalIteratorTag>
 	class VectorIter;
-	template<typename T>
-	class ConstVectorIter;
-	template<typename T>
-	class ReverseVectorIter;
-	template<typename T>
-	class ConstReverseVectorIter;
 
-	template<
-		typename T,
-		class Allocator = std::allocator<T>>
+	template<typename T,
+			 class Allocator = std::allocator<T> >
 	class vector {
 		public:
 			typedef T value_type;
@@ -46,9 +43,9 @@ namespace ft {
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
 			typedef VectorIter<T> iterator;
-			typedef ConstVectorIter<T> const_iterator;
-			typedef ReverseVectorIter<T> reverse_iterator;
-			typedef ConstReverseVectorIter<T> const_reverse_iterator;
+			typedef VectorIter<T, const T*, const T&> const_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			vector(): vector(Allocator()) {}
 			explicit vector(const Allocator& alloc) {
@@ -164,14 +161,14 @@ namespace ft {
 			const_pointer data() const { return _data; }
 
 	//iterators
-			iterator begin() { return VectorIter<T>(_data); }
-			iterator end() { return VectorIter<T>(&_data[_size]); }
-			const_iterator begin() const { return ConstVectorIter<T>(_data); }
-			const_iterator end() const { return ConstVectorIter<T>(&_data[_size]); }
-			reverse_iterator rbegin() { return ReverseVectorIter<T>(&_data[_size - 1]); }
-			reverse_iterator rend() { return ReverseVectorIter<T>(&_data[-1]); }
-			const_reverse_iterator rbegin() const { return ConstReverseVectorIter<T>(&_data[_size - 1]); }
-			const_reverse_iterator rend() const { return ConstReverseVectorIter<T>(&_data[-1]); }
+			iterator begin() { return iterator(_data); }
+			iterator end() { return iterator(&_data[_size]); }
+			const_iterator begin() const { return const_iterator(_data); }
+			const_iterator end() const { return const_iterator(&_data[_size]); }
+			reverse_iterator rbegin() { return reverse_iterator(iterator(&_data[_size - 1])); }
+			reverse_iterator rend() { return reverse_iterator(iterator(&_data[-1])); }
+			const_reverse_iterator rbegin() const { return const_reverse_iterator(iterator(&_data[_size - 1])); }
+			const_reverse_iterator rend() const { return const_reverse_iterator(iterator(&_data[-1])); }
 
 	//Capacity
 			bool empty() const { return _size == 0; }
@@ -374,7 +371,4 @@ namespace ft {
 }
 
 # include "vector_iterator.hpp"
-//# include "vector_it/reverse_iterator.hpp"
-//# include "vector_it/const_reverse_iterator.hpp"
-//# include "vector_it/const_iterator.hpp"
 #endif

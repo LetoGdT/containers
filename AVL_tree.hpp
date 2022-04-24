@@ -6,14 +6,15 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/21 20:03:02 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 17:50:28 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AVL_TREE_HPP
 # define AVL_TREE_HPP
+# include <cstddef>
+# include <algorithm>
 # include "pair.hpp"
-#include <iostream>
 
 namespace ft {
 	template <
@@ -407,28 +408,6 @@ namespace ft {
 
 			void erase(Key const & key) {
 				_remove(_root, key);
-			}
-
-			void print_tree(Node * node, _size_type depth) {
-				if (node == NULL)
-					return ;
-				if (node->_right != NULL)
-					print_tree(node->_right, depth + 1);
-				for (int i = 1 ; i < depth ; i++)
-					std::cout << " ";
-				if (node->_parent != NULL) {
-					if (node->_parent->_right == node)
-						std::cout << "/";
-					else
-						std::cout << "\\";
-				}
-				std::cout << node->_content.second << std::endl;
-				if (node->_left != NULL)
-					print_tree(node->_left, depth + 1);
-			}
-
-			void print() {
-				print_tree(_root, 0);
 			}
 
 			bool compare_nodes(Node * const node1, Node * const node2) {

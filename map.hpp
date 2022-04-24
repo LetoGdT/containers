@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/21 20:34:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 17:51:00 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,17 @@
 # include <exception>
 # include "pair.hpp"
 # include "AVL_tree.hpp"
+# include "iterator.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft {
-	template<typename Key,
-			 typename T,
+	template<typename T,
 			 typename Compare,
-			 typename Allocator>
+			 typename Allocator,
+			 typename Pointer = T*,
+			 typename Reference = T&,
+			 typename Category = BidirectionalIteratorTag>
 	class MapIter;
-	template<typename Key,
-			 typename T,
-			 typename Compare,
-			 typename Allocator>
-	class ConstMapIter;
-	template<typename Key,
-			 typename T,
-			 typename Compare,
-			 typename Allocator>
-	class ReverseMapIter;
-	template<typename Key,
-			 typename T,
-			 typename Compare,
-			 typename Allocator>
-	class ConstReverseMapIter;
 
 	template<
 		class Key,
@@ -61,10 +50,10 @@ namespace ft {
 			typedef const value_type& const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			typedef MapIter<Key, T, Compare, Allocator> iterator;
-			typedef ConstMapIter<Key, T, Compare, Allocator> const_iterator;
-			typedef ReverseMapIter<Key, T, Compare, Allocator> reverse_iterator;
-			typedef ConstReverseMapIter<Key, T, Compare, Allocator> const_reverse_iterator;
+			typedef MapIter<value_type, Compare, Allocator> iterator;
+			typedef MapIter<value_type, Compare, Allocator, const value_type*, const value_type&> const_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			map(): map(Compare(), Allocator()) {}
 			explicit map(Compare const & comp, const Allocator& alloc = Allocator()) {
@@ -128,23 +117,23 @@ namespace ft {
 			}
 			reverse_iterator rbegin() {
 				_Node * node = _tree.get_rightmost();
-				reverse_iterator it(node, &_tree);
+				reverse_iterator it(iterator(node, &_tree));
 				return it;
 			}
 			reverse_iterator rend() {
 				_Node * node = _tree.get_leftmost();
-				reverse_iterator it(node, &_tree);
+				reverse_iterator it(iterator(node, &_tree));
 				++it;
 				return it;
 			}
 			const_reverse_iterator rbegin() const {
 				_Node * node = _tree.get_rightmost();
-				const_reverse_iterator it(node, &_tree);
+				const_reverse_iterator it(iterator(node, &_tree));
 				return it;
 			}
 			const_reverse_iterator rend() const {
 				_Node * node = _tree.get_leftmost();
-				const_reverse_iterator it(node, &_tree);
+				const_reverse_iterator it(iterator(node, &_tree));
 				++it;
 				return it;
 			}
@@ -279,5 +268,5 @@ namespace ft {
 	};
 }
 
-# include "map_it/iterator.hpp"
+# include "map_iterator.hpp"
 #endif
