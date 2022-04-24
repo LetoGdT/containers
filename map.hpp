@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 20:53:02 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 21:09:00 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,10 @@
 # include <exception>
 # include "pair.hpp"
 # include "AVL_tree.hpp"
-# include "iterator.hpp"
+# include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
 
 namespace ft {
-	template<typename T,
-			 typename Compare,
-			 typename Allocator,
-			 typename Pointer = T*,
-			 typename Reference = T&,
-			 typename Category = std::random_access_iterator_tag>
-	class MapIter;
-
 	template<
 		class Key,
 		class T,
@@ -50,8 +42,8 @@ namespace ft {
 			typedef const value_type& const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			typedef MapIter<value_type, Compare, Allocator> iterator;
-			typedef MapIter<value_type, Compare, Allocator, const value_type*, const value_type&> const_iterator;
+			typedef MapIter<value_type, Compare, Allocator, difference_type> iterator;
+			typedef MapIter<value_type, Compare, Allocator, difference_type, const value_type*, const value_type&> const_iterator;
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 

@@ -6,29 +6,30 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:02:37 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/24 21:08:46 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
-# include "map.hpp"
+# include "iterator.hpp"
+# include "AVL_tree.hpp"
 
 namespace ft{
 	template<typename T,
 			 typename Compare,
 			 typename Allocator,
-			 typename Pointer,
-			 typename Reference,
-			 typename Category>
-	class MapIter: public ft::iterator<Category, T, std::ptrdiff_t, Pointer, Reference>{
+			 typename Distance = std::ptrdiff_t,
+			 typename Pointer = T*,
+			 typename Reference = T&,
+			 typename Category = std::random_access_iterator_tag>
+	class MapIter: public ft::iterator<Category, T, Distance, Pointer, Reference>{
 		private:
 			typedef AVL_tree<typename T::first_type, typename T::second_type, Compare, Allocator> _tree_type;
-			typedef typename ft::map<typename T::first_type, typename T::second_type, Compare, Allocator> _map_type;
 			typedef typename _tree_type::Node _Node;
 
 		public:
-			typedef typename _map_type::difference_type difference_type;
+			typedef Distance difference_type;
 			typedef T value_type;
 			typedef Pointer pointer;
 			typedef Reference reference;
