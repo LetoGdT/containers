@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 23:02:20 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 11:22:35 by lgaudet-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,35 +138,84 @@ namespace ft{
 			_tree_type*	_tree;
 			bool		_is_end;
 	};
-	template<typename IteratorL, typename IteratorR>
-	bool operator==(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator==(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return lhs.get_data().first == rhs.get_data().first;
 	}
-	template<typename IteratorL, typename IteratorR>
-	bool operator!=(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator!=(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return !(lhs==rhs);
 	}
-	template<typename IteratorL, typename IteratorR>
-	bool operator<(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator<(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return lhs.get_tree()->compare_nodes(lhs.get_data(), rhs.get_data());
 	}
-	template<typename IteratorL, typename IteratorR>
-	bool operator>(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator>(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return rhs < lhs;
 	}
-	template<typename IteratorL, typename IteratorR>
-	bool operator<=(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator<=(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return !(rhs < lhs);
 	}
-	template<typename IteratorL, typename IteratorR>
-	bool operator>=(const IteratorL & lhs, const IteratorR & rhs) {
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator>=(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
 		return !(lhs < rhs);
 	}
 	
-	template<typename IteratorL, typename IteratorR>
-	typename IteratorL::difference_type operator-(const IteratorL & lhs, const IteratorR & rhs) {
-		typename IteratorL::difference_type res;
-		IteratorR it(rhs);
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	D operator-(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
+		typename MapIter<A, B, C, D, X1, Y1>::difference_type res;
+		MapIter<A, B, C, D, X2, Y2> it(rhs);
 		for (res = 0 ; it != lhs && it._is_end == false ; it++)
 			res++;
 		return res;
