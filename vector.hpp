@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 14:10:22 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 20:48:54 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ namespace ft {
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-			vector(): vector(Allocator()) {}
-			explicit vector(const Allocator& alloc) {
+			explicit vector(const Allocator& alloc = Allocator()) {
 				_alloc = alloc;
 				_capacity = _INITIAL_CAPACITY;
 				_size = 0;
@@ -131,12 +130,12 @@ namespace ft {
 	//element access
 			reference at(size_type pos) {
 				if (pos >= _size)
-					throw std::out_of_range("at: out of range");
+					throw std::out_of_range("vector");
 				return _data[pos];
 			}
 			const_reference at(size_type pos) const {
 				if (pos >= _size)
-					throw std::out_of_range("at: out of range");
+					throw std::out_of_range("vector");
 				return _data[pos];
 			}
 
@@ -213,7 +212,7 @@ namespace ft {
 			//erase()
 			iterator erase(iterator pos) {
 				if (pos < begin())
-					return pos;
+					pos = begin();
 				size_type n = pos - begin();
 				if (n >= _size)
 					return pos;
@@ -262,7 +261,7 @@ namespace ft {
 				_size = count;
 			}
 
-			void swap(vector<T>& other) {
+			void swap(vector& other) {
 				//Saving this’s attributes
 				pointer tmp_data = this->_data;
 				size_type tmp_size = this->_size;

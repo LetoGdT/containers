@@ -1,7 +1,17 @@
 NAME		:=	ft std
 SRCS		:=	main.cpp
 
-HDRS		:=	
+HDRS		:=	AVL_tree.hpp\
+				is_integral.hpp\
+				iterator.hpp\
+				lexicographical_compare.hpp\
+				map.hpp\
+				map_iterator.hpp\
+				pair.hpp\
+				reverse_iterator.hpp\
+				stack.hpp\
+				vector.hpp\
+				vector_iterator.hpp
 
 OBJS		:=	$(SRCS:%.cpp=%.o)
 
@@ -19,10 +29,10 @@ test:
 				time ./ft > /dev/null
 				time ./std > /dev/null
 
-ft:				$(SRCS)
+ft:				$(SRCS) $(HDRS)
 				$(CXX) $(CFLAGS) $< -o ft
 
-std:			$(SRCS)
+std:			$(SRCS) $(HDRS)
 				$(CXX) $(CFLAGS) -D STD $< -o std
 
 clean:

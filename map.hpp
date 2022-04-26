@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 22:47:41 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 20:47:17 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ namespace ft {
 											   rhs.begin(), rhs.end(),
 											   lhs.value_operator_more_equ);
 			}
-			friend void swap(value_type& lhs, value_type& rhs) {
+			friend void swap(map & lhs, map & rhs) {
 				lhs.swap(rhs);
 			}
 

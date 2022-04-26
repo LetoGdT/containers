@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 13:50:25 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 19:55:21 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,18 @@ namespace ft{
 			~VectorIter() {}
 
 			friend VectorIter operator+(difference_type n, const VectorIter & it) {
-				VectorIter iter(*it);
+				VectorIter iter(it);
 				iter._data += n;
 				return iter;
 			}
 			friend VectorIter operator-(const VectorIter & it, difference_type n) {
-				VectorIter iter(*it);
+				VectorIter iter(it);
 				iter._data -= n;
 				return iter;
 			}
 
 			friend VectorIter operator+(const VectorIter & it, difference_type n) {
-				VectorIter iter(*it);
+				VectorIter iter(it);
 				iter._data += n;
 				return iter;
 			}
