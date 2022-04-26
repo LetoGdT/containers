@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:02:37 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:10:22 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,32 +286,32 @@ namespace ft {
 									vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_equ);
+												vector::_value_operator_equ);
 			}
 			friend bool operator!=(vector const & lhs, vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_diff);
+												vector::_value_operator_diff);
 			}
 			friend bool operator<(vector const & lhs, vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_less);
+												vector::_value_operator_less);
 			}
 			friend bool operator<=(vector const & lhs, vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_less_equ);
+												vector::_value_operator_less_equ);
 			}
 			friend bool operator>(vector const & lhs, vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_more);
+												vector::_value_operator_more);
 			}
 			friend bool operator>=(vector const & lhs, vector const & rhs) {
 				return lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
-												_value_operator_more_equ);
+												vector::_value_operator_more_equ);
 			}
 
 			friend void swap(vector const & lhs, vector const & rhs) {

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 20:05:23 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 11:22:06 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/26 13:50:25 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator==(const VectorIter<A, B, X1, Y1> & lhs, const VectorIter<A, B, X2, Y2> & rhs) {
-		return lhs._data == rhs._data;
+		return lhs.get_data() == rhs.get_data();
 	}
 	template<typename A,
 			 typename B,
@@ -137,7 +137,7 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator>(const VectorIter<A, B, X1, Y1> & lhs, const VectorIter<A, B, X2, Y2> & rhs) {
-		return rhs._data < lhs._data;
+		return rhs.get_data() < lhs.get_data();
 	}
 	template<typename A,
 			 typename B,
@@ -146,7 +146,7 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator<=(const VectorIter<A, B, X1, Y1> & lhs, const VectorIter<A, B, X2, Y2> & rhs) {
-		return !(rhs._data < lhs._data);
+		return !(rhs.get_data() < lhs.get_data());
 	}
 	template<typename A,
 			 typename B,
@@ -155,7 +155,7 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator>=(const VectorIter<A, B, X1, Y1> & lhs, const VectorIter<A, B, X2, Y2> & rhs) {
-		return !(lhs._data < rhs._data);
+		return !(lhs.get_data() < rhs.get_data());
 	}
 
 	template<typename A,

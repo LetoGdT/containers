@@ -6,19 +6,28 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 21:46:08 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/26 15:03:21 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
-#include "map.hpp"
 #include <iostream>
+#ifndef STD
+# include "vector.hpp"
+# include "map.hpp"
+# include "stack.hpp"
+# define NAMESPACE ft
+#else
+# include <vector>
+# include <map>
+# include <stack>
+# define NAMESPACE std
+#endif
 
 int main() {
-	ft::vector<int> v(50, 42);
+	NAMESPACE::vector<int> v(50, 42);
 
-	ft::vector<int>::iterator i;
-	ft::vector<int>::const_iterator j;
+	NAMESPACE::vector<int>::iterator i;
+	NAMESPACE::vector<int>::const_iterator j;
 	i = v.begin();
 	j = v.begin();
 	i++;
@@ -26,10 +35,11 @@ int main() {
 	std::cout << (i > j) << std::endl;
 	std::cout << (i == j) << std::endl;
 
-	ft::map<int, int> m;
-	m.insert(ft::make_pair(2, 2));
-	ft::map<int, int>::iterator k;
-	ft::map<int, int>::const_iterator l;
+	NAMESPACE::map<int, int> m;
+	m.insert(NAMESPACE::make_pair(2, 2));
+	NAMESPACE::map<int, int>::iterator k;
+	NAMESPACE::map<int, int>::const_iterator l;
+
 	return 0;
 }
 
