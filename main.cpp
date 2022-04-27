@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 18:38:00 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 19:24:40 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,14 +225,31 @@ int main() {
 		std::cout << "*(i + 1): " << *(i + 1) << std::endl;
 		std::cout << "*(1 + i): " << *(1 + i) << std::endl;
 		std::cout << "i - j: " << i - j << std::endl;
+		i++;
+		NAMESPACE::vector<int>::const_iterator k = v.begin();
+		std::cout << "testing iterators" << std::endl;
+		std::cout << "k: v.begin() + 1" << std::endl;
+		std::cout << "*k: " << *k << std::endl;
+		std::cout << "(k != i): " << (k != j) << std::endl;
+		std::cout << "(k < i): " << (k < j) << std::endl;
+		std::cout << "(k > i): " << (k > j) << std::endl;
+		std::cout << "(k <= i): " << (k <= j) << std::endl;
+		std::cout << "(k >= i): " << (k >= j) << std::endl;
+		std::cout << "k - i: " << k - j << std::endl;
+		NAMESPACE::vector<int>::reverse_iterator l = v.rbegin();
+		std::cout << "showing both normal and reverse iterators" << std::endl;
+		for (i = v.begin() ; i != v.end() && l != v.rend() ; ++i, ++l)
+			std::cout << *i << " " << *l << std::endl;
 	}
 
 	// Tests of map
 	{
 		NAMESPACE::map<int, int> m;
-		m.insert(NAMESPACE::make_pair(2, 2));
+		for (int i = 0 ; i < 50 ; ++i) {
+			int nb = rand()%100;
+			m.insert(NAMESPACE::make_pair(nb, nb));
+		}
 		NAMESPACE::map<int, int>::iterator k;
-		NAMESPACE::map<int, int>::const_iterator l;
 	}
 
 	//Tests of stack

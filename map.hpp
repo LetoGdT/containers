@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 20:47:17 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:50:34 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ namespace ft {
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-			map(): _tree(_tree_type(Compare(), Allocator())) {}
+			map(){
+				_tree = _tree_type(Compare(), Allocator());
+			}
 			explicit map(Compare const & comp, const Allocator& alloc = Allocator()) {
 				_tree = _tree_type(comp, alloc);
 			}
@@ -252,13 +254,15 @@ namespace ft {
 											   rhs.begin(), rhs.end(),
 											   lhs.value_operator_more_equ);
 			}
-			friend void swap(map & lhs, map & rhs) {
-				lhs.swap(rhs);
-			}
-
 		private:
 			_tree_type _tree;
 	};
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	void swap(map<Key, T, Compare, Allocator> & lhs,
+			  map<Key, T, Compare, Allocator> & rhs) {
+		lhs.swap(rhs);
+	}
+
 }
 
 # include "map_iterator.hpp"

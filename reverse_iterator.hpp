@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 21:13:51 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 16:24:49 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 19:31:05 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,25 @@ namespace ft{
 			reference operator*() const { return *current; }
 			pointer operator->() const { return current.operator->(); }
 
-			reverse_iterator& operator++() { return --current; }
-			reverse_iterator operator++(int) { return current--; }
+			reverse_iterator& operator++() {
+				--current;
+				return *this;
+			}
+			reverse_iterator operator++(int) {
+				reverse_iterator it(current);
+				--current;
+				return *this;
+			}
 
-			reverse_iterator& operator--() { return ++current; }
-			reverse_iterator operator--(int) { return current++; }
+			reverse_iterator& operator--() {
+				++current;
+				return *this;
+			}
+			reverse_iterator operator--(int) {
+				reverse_iterator it(current);
+				++current;
+				return it;
+			}
 
 			reverse_iterator operator+(difference_type n) const {
 				return reverse_iterator(current - n);

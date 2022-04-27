@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/24 22:51:36 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:53:27 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,8 +362,8 @@ namespace ft {
 
 		public:
 			AVL_tree(): _root(NULL),
-						_nb_of_nodes(0),
 						_alloc(allocator_type()),
+						_nb_of_nodes(0),
 						_comp(Compare()) {
 				_alloc = allocator_type();
 			}
