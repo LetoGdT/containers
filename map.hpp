@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 20:02:47 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 23:32:45 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,20 @@ namespace ft {
 			mapped_type & at(const key_type& key) {
 				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
-					throw std::out_of_range("ft::map: value not found");
-				return tmp->_content->second;
+					throw std::out_of_range("map::at:  key not found");
+				return tmp->_content.second;
 			}
 			const mapped_type & at(const key_type& key) const {
 				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
-					throw std::out_of_range("ft::map: value not found");
-				return tmp->second;
+					throw std::out_of_range("map::at:  key not found");
+				return tmp->_content.second;
 			}
 			mapped_type & operator[](const key_type& key) {
 				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
 					return _tree.insert(make_pair(key, mapped_type()))->_content.second;
-				return tmp->_content->second;
+				return tmp->_content.second;
 			}
 
 		//iterators
@@ -159,7 +159,8 @@ namespace ft {
 			}
 
 			void erase(iterator pos) {
-				_tree.erase((*pos).first);
+				if (pos != end())
+					_tree.erase((*pos).first);
 			}
 			void erase(iterator first, iterator last) {
 				for (iterator it = first ; it != last ; ++it)

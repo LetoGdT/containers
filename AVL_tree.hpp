@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 21:45:31 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/28 00:26:59 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,16 +299,16 @@ namespace ft {
 				return node;
 			}
 
-			Node * _copy_node(Node const * other) {
+			Node * _copy_node(Node const * other, Node * parent) {
 				if (other == NULL)
 					return NULL;
 				Node * res;
 				res = _make_node(other->_content);
-				res->_left = _copy_node(other->_left);
-				res->_right = _copy_node(other->_right);
+				res->_left = _copy_node(other->_left, res);
+				res->_right = _copy_node(other->_right, res);
 				res->_balance_factor = other->_balance_factor;
 				res->_height = other->_height;
-				res->_parent = other->_parent;
+				res->_parent = parent;
 				return res;
 			}
 
@@ -373,13 +373,13 @@ namespace ft {
 																	 _comp(comp) {
 				(void)alloc;
 			}
-			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root)),
+			AVL_tree(AVL_tree const & other): _root(_copy_node(other._root, NULL)),
 											  _alloc(other._alloc),
 											  _nb_of_nodes(other._nb_of_nodes),
 											  _comp(other._comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
-				_root = _copy_node(other._root);
+				_root = _copy_node(other._root, NULL);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
 				//_comp = other._comp;
@@ -457,19 +457,19 @@ namespace ft {
 				tmp._root = _root;
 				tmp._alloc = _alloc;
 				tmp._nb_of_nodes = _nb_of_nodes;
-				tmp._comp = _comp;
+				//tmp._comp = _comp;
 
 				// Replace the value of this with the value of other
 				_root = other._root;
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
-				_comp = other._comp;
+				//_comp = other._comp;
 
 				// Replace the value of other with the saved value of this
 				other._root = tmp._root;
 				other._alloc = tmp._alloc;
 				other._nb_of_nodes = tmp._nb_of_nodes;
-				other._comp = tmp._comp;
+				//other._comp = tmp._comp;
 			}
 
 			// Returns a node pointer to a node containing a key greater than or equal 
