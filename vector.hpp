@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 20:48:54 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:26:08 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,9 +228,10 @@ namespace ft {
 				size_type count = 0;
 				for (iterator it = first ; it != last && it != end() ; it++, count++)
 					_alloc.destroy(_data + count); 	// the allocated objects are destroyed
-				memmove(_data + (first - begin()), 	//dest of the tail end of the list; first - begin() gives the index of the first element to remove
-						_data + (first - begin()) + count,  //org of the tail end of the list, count elements after the begining of the area to remove
-						(_size - (begin() - first) - count) * sizeof(value_type)); //number of bytes to move
+				if (last < end())
+					memmove(_data + (first - begin()), 	//dest of the tail end of the list; first - begin() gives the index of the first element to remove
+							_data + (first - begin()) + count,  //org of the tail end of the list, count elements after the begining of the area to remove
+							(_size - (begin() - first) - count) * sizeof(value_type)); //number of bytes to move
 				_size -= count;
 				return first;
 			}
@@ -313,26 +314,6 @@ namespace ft {
 												vector::_value_operator_more_equ);
 			}
 
-			friend void swap(vector const & lhs, vector const & rhs) {
-				//Saving lhs’s attributes
-				pointer tmp_data = lhs->_data;
-				size_type tmp_size = lhs->_size;
-				size_type tmp_capacity = lhs->_capacity;
-				Allocator& tmp_alloc = lhs->_alloc;
-
-				//Copying rhs’s attributes to lhs
-				lhs->_data = rhs._data;
-				lhs->_size = rhs._size;
-				lhs->_capacity = rhs._capacity;
-				lhs->_alloc = rhs._alloc;
-
-				//Setting rhs’s attributes to the saved values of this
-				rhs._data = tmp_data;
-				rhs._size = tmp_size;
-				rhs._capacity = tmp_capacity;
-				rhs._alloc = tmp_alloc;
-			}
-
 		private:
 			pointer _data;
 			size_type _size;
@@ -361,6 +342,11 @@ namespace ft {
 			inline static bool _value_operator_more(const value_type a, const value_type b) { return a > b; }
 			inline static bool _value_operator_more_equ(const value_type a, const value_type b) { return a >= b; }
 	};
+
+	template <typename T, typename Allocator>
+	void swap(vector<T, Allocator> & lhs, vector<T, Allocator> & rhs) {
+		lhs.swap(rhs);
+	}
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 20:33:02 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:38:00 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,18 +130,101 @@ int main() {
 		std::cout << *i << std::endl;
 		for (i = v.begin() ; i != v.end() ; ++i)
 			std::cout << *i << std::endl;
-
+		std::cout << "testing v.erase(v.begin() + 2, v.begin() + 4)" << std::endl;
+		i = v.erase(v.begin() + 2, v.begin() + 4);
+		std::cout << *i << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "testing v.erase(v.begin(), v.begin() + 4)" << std::endl;
+		i = v.erase(v.begin(), v.begin() + 4);
+		std::cout << *i << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "current size of v: " << v.size() << std::endl;
+		std::cout << "current v.back(): " << v.back() << std::endl;
+		std::cout << "testing v.push_back(rand()%200)" << std::endl;
+		v.push_back(rand()%200);
+		std::cout << "current v.back(): " << v.back() << std::endl;
+		std::cout << "current *(v.end() - 2) " << *(v.end() - 2) << std::endl;
+		std::cout << "current size of v: " << v.size() << std::endl;
+		std::cout << "testing v.pop_back()" << std::endl;
+		v.pop_back();
+		std::cout << "current v.back(): " << v.back() << std::endl;
+		std::cout << "current size of v: " << v.size() << std::endl;
+		std::cout << "testing v.resize with count equal to v.size()" << std::endl;
+		std::cout << "before:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		v.resize(v.size());
+		std::cout << "after:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "testing v.resize with count greater than v.size()" << std::endl;
+		std::cout << "before:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		v.resize(v.size() + 10);
+		std::cout << "after:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "testing v.resize with count smaller than v.size()" << std::endl;
+		std::cout << "before:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		v.resize(v.size() - 10);
+		std::cout << "after:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "testing v.swap(w)" << std::endl;
+		std::cout << "before:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		v.swap(w);
+		std::cout << "after:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		std::cout << "testing NAMESPACE::swap(v, w)" << std::endl;
+		std::cout << "before:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
+		NAMESPACE::swap(v, w);
+		std::cout << "after:" << std::endl;
+		for (i = v.begin() ; i != v.end() ; ++i)
+			std::cout << *i << std::endl;
 
 		std::cout << std::endl;
 		NAMESPACE::vector<int>::const_iterator j;
 		i = v.begin();
 		j = v.begin();
 		i++;
-		std::cout << (i != j) << std::endl;
-		std::cout << (i < j) << std::endl;
-		std::cout << (i > j) << std::endl;
-		std::cout << (i <= j) << std::endl;
-		std::cout << (i >= j) << std::endl;
+		std::cout << "testing iterators" << std::endl;
+		std::cout << "i: v.begin() + 1" << std::endl;
+		std::cout << "j: v.begin()" << std::endl;
+		std::cout << "*i: " << *i << std::endl;
+		std::cout << "*j: " << *j << std::endl;
+		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i < j): " << (i < j) << std::endl;
+		std::cout << "(i > j): " << (i > j) << std::endl;
+		std::cout << "(i <= j): " << (i <= j) << std::endl;
+		std::cout << "(i >= j): " << (i >= j) << std::endl;
+		std::cout << "*(i - 1): " << *(i - 1) << std::endl;
+		std::cout << "*(i + 1): " << *(i + 1) << std::endl;
+		std::cout << "*(1 + i): " << *(1 + i) << std::endl;
+		std::cout << "i - j: " << i - j << std::endl;
+		i--;
+		std::cout << "i--" << std::endl;
+		std::cout << "i: v.begin() + 1" << std::endl;
+		std::cout << "j: v.begin()" << std::endl;
+		std::cout << "*i: " << *i << std::endl;
+		std::cout << "*j: " << *j << std::endl;
+		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i < j): " << (i < j) << std::endl;
+		std::cout << "(i > j): " << (i > j) << std::endl;
+		std::cout << "(i <= j): " << (i <= j) << std::endl;
+		std::cout << "(i >= j): " << (i >= j) << std::endl;
+		std::cout << "*(i + 1): " << *(i + 1) << std::endl;
+		std::cout << "*(1 + i): " << *(1 + i) << std::endl;
+		std::cout << "i - j: " << i - j << std::endl;
 	}
 
 	// Tests of map
