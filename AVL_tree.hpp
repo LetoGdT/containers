@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 18:53:27 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 21:45:31 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,8 +349,8 @@ namespace ft {
 			Node * _get_rightmost(Node * node) const {
 				if (node == NULL)
 					return NULL;
-				while (node->_left != NULL)
-					node = node->_left;
+				while (node->_right != NULL)
+					node = node->_right;
 				return node;
 			}
 
@@ -409,7 +409,7 @@ namespace ft {
 				_remove(_root, key);
 			}
 
-			bool compare_nodes(Node * const node1, Node * const node2) {
+			bool compare_nodes(Node * const node1, Node * const node2) const {
 				return _comp(node1->_content.first, node2->_content.first);
 			}
 

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 11:22:35 by lgaudet-         ###   ########lyon.fr   */
+/*   Updated: 2022/04/27 21:51:04 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ namespace ft{
 			}
 			MapIter & operator=(MapIter const & other) {
 				_data = other._data;
+				_tree = other._tree;
 				_is_end = other._is_end;
 				return *this;
 			}
@@ -80,8 +81,8 @@ namespace ft{
 				return *this;
 			}
 			MapIter operator++(int) { 
-				MapIter iter(_data);
-				_Node* tmp = get_successor_iterator(_data);
+				MapIter iter(_data, _tree);
+				_Node* tmp = _tree->get_successor_iterator(_data);
 				if (tmp == NULL)
 					_is_end = true;
 				else
@@ -97,7 +98,7 @@ namespace ft{
 				return *this;
 			}
 			MapIter operator--(int) { 
-				MapIter iter(_data);
+				MapIter iter(_data, _tree);
 				_Node* tmp = _tree->get_predecessor_iterator(_data);
 				if (tmp != NULL) {
 					_is_end = false;
@@ -118,7 +119,7 @@ namespace ft{
 				return (*this) += -n;
 			}
 
-			reference operator*() const { return _data->content; }
+			reference operator*() const { return _data->_content; }
 			pointer operator->() const { return &(_data->_content); }
 			reference operator[](difference_type n) {
 				MapIter iter(*this);
@@ -138,6 +139,7 @@ namespace ft{
 			_tree_type*	_tree;
 			bool		_is_end;
 	};
+
 	template<typename A,
 			 typename B,
 			 typename C,
@@ -147,7 +149,8 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator==(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
-		return lhs.get_data().first == rhs.get_data().first;
+		return lhs.get_data()->_content.first == rhs.get_data()->_content.first &&
+				lhs.get_is_end() == rhs.get_is_end();
 	}
 	template<typename A,
 			 typename B,
@@ -169,7 +172,8 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator<(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
-		return lhs.get_tree()->compare_nodes(lhs.get_data(), rhs.get_data());
+		return lhs.get_tree()->compare_nodes(lhs.get_data(), rhs.get_data()) ||
+				(lhs.get_is_end() == false && rhs.get_is_end() == true);
 	}
 	template<typename A,
 			 typename B,

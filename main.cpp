@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 19:24:40 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 20:55:40 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,6 +250,21 @@ int main() {
 			m.insert(NAMESPACE::make_pair(nb, nb));
 		}
 		NAMESPACE::map<int, int>::iterator k;
+		NAMESPACE::map<int, int> n = m;
+		NAMESPACE::map<int, int> o(m);
+		NAMESPACE::map<int, int> p(m.begin(), m.end());
+		std::cout << "showing m" << std::endl;
+		for (k = m.begin() ; k != m.end() ; ++k)
+			std::cout << (*k).first << std::endl;
+		std::cout << "showing n" << std::endl;
+		for (k = n.begin() ; k != n.end() ; ++k)
+			std::cout << (*k).first << std::endl;
+		std::cout << "showing o" << std::endl;
+		for (k = o.begin() ; k != o.end() ; ++k)
+			std::cout << (*k).first << std::endl;
+		std::cout << "showing p" << std::endl;
+		for (k = p.begin() ; k != p.end() ; ++k)
+			std::cout << (*k).first << std::endl;
 	}
 
 	//Tests of stack

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 18:50:34 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/27 20:02:47 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ namespace ft {
 			template<class InputIt>
 				map(InputIt first, InputIt last,
 					const Compare& comp = Compare(),
-					const Allocator& alloc = Allocator()): map(comp, alloc) {
+					const Allocator& alloc = Allocator()) {
+				_tree = _tree_type(comp, alloc);
 				for (InputIt i = first ; i != last ; i++)
 					_tree.insert(*i);
 			}
