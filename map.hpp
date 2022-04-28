@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 23:32:45 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/28 19:50:35 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,9 @@ namespace ft {
 					_tree.erase((*pos).first);
 			}
 			void erase(iterator first, iterator last) {
-				for (iterator it = first ; it != last ; ++it)
-					_tree.erase((*it).first);
+				iterator it = first;
+				while (it != last)
+					_tree.erase((*it++).first);
 			}
 			size_type erase(const Key& key) {
 				size_type old_size = _tree.get_size();
@@ -172,7 +173,9 @@ namespace ft {
 				return old_size != _tree.get_size();
 			}
 			void swap(map& other) {
-				_tree.swap(other._tree);
+				_tree_type tmp = _tree;
+				_tree = other._tree;
+				other._tree = tmp;
 			}
 
 		//lookup

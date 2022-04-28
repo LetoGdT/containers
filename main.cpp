@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/28 00:25:24 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/28 18:27:04 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,10 +328,9 @@ int main() {
 		std::cout << "k++" << std::endl;
 		std::cout << "k++" << std::endl;
 		std::cout << "testing erase(++m.begin(), k)" << std::endl;
-		// ne marche pas pour ft
-		// m.erase(++m.begin(), k);
-		// for (k = m.begin() ; k != m.end() ; ++k)
-		// 	std::cout << (*k).second << std::endl;
+		m.erase(++m.begin(), k);
+		for (k = m.begin() ; k != m.end() ; ++k)
+			std::cout << (*k).second << std::endl;
 		m.clear();
 		n.clear();
 		for (int i = 0 ; i < 50 ; ++i) {
@@ -347,7 +346,7 @@ int main() {
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
 			std::cout << (*k).first << std::endl;
-		std::cout << "m" << std::endl;
+		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
 			std::cout << (*k).first << std::endl;
 		m.swap(n);
@@ -355,7 +354,7 @@ int main() {
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
 			std::cout << (*k).first << std::endl;
-		std::cout << "m" << std::endl;
+		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
 			std::cout << (*k).first << std::endl;
 		std::cout << "testing NAMESPACE::swap(m, n)" << std::endl;
@@ -363,7 +362,7 @@ int main() {
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
 			std::cout << (*k).first << std::endl;
-		std::cout << "m" << std::endl;
+		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
 			std::cout << (*k).first << std::endl;
 		NAMESPACE::swap(m, n);
@@ -371,7 +370,7 @@ int main() {
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
 			std::cout << (*k).first << std::endl;
-		std::cout << "m" << std::endl;
+		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
 			std::cout << (*k).first << std::endl;
 	}

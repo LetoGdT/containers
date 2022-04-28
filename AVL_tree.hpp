@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/28 00:26:59 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/28 18:25:38 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,28 +448,6 @@ namespace ft {
 
 			Node * get_rightmost() {
 				return _get_rightmost(_root);
-			}
-
-			void swap(AVL_tree& other) {
-				AVL_tree tmp;
-
-				// Save the value of this
-				tmp._root = _root;
-				tmp._alloc = _alloc;
-				tmp._nb_of_nodes = _nb_of_nodes;
-				//tmp._comp = _comp;
-
-				// Replace the value of this with the value of other
-				_root = other._root;
-				_alloc = other._alloc;
-				_nb_of_nodes = other._nb_of_nodes;
-				//_comp = other._comp;
-
-				// Replace the value of other with the saved value of this
-				other._root = tmp._root;
-				other._alloc = tmp._alloc;
-				other._nb_of_nodes = tmp._nb_of_nodes;
-				//other._comp = tmp._comp;
 			}
 
 			// Returns a node pointer to a node containing a key greater than or equal 
