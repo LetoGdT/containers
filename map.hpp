@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/28 19:50:35 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/29 23:58:22 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "AVL_tree.hpp"
 # include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
+# include "lexicographical_compare.hpp"
 
 namespace ft {
 	template<
@@ -183,22 +184,28 @@ namespace ft {
 				return (_tree.find(key) != NULL) ? 1 : 0;
 			}
 			iterator find(const Key& key) {
-				iterator it(_tree.find(key), _tree);
+				_Node * res = _tree.find(key);
+				if (res == NULL)
+					return end();
+				iterator it(res, &_tree);
 				return it;
 			}
 			const_iterator find(const Key& key) const {
-				const_iterator it(_tree.find(key), _tree);
+				_Node * res = _tree.find(key);
+				if (res == NULL)
+					return end();
+				const_iterator it(_tree.find(key), &_tree);
 				return it;
 			}
 
-			std::pair<iterator, iterator> equal_range(const Key& key) {
-				std::pair<iterator, iterator> res;
+			ft::pair<iterator, iterator> equal_range(const Key& key) {
+				ft::pair<iterator, iterator> res;
 				res.first = lower_bound(key);
 				res.second = upper_bound(key);
 				return res;
 			}
-			std::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
-				std::pair<const_iterator, const_iterator> res;
+			ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const {
+				ft::pair<const_iterator, const_iterator> res;
 				res.first = lower_bound(key);
 				res.second = upper_bound(key);
 				return res;
@@ -230,34 +237,34 @@ namespace ft {
 
 		//friends
 			friend bool operator==(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_equ);
+											   map::_tree_type::value_operator_equ);
 			}
 			friend bool operator!=(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_diff);
+											   map::_tree_type::value_operator_diff);
 			}
 			friend bool operator<(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_less);
+											   lhs._tree.value_operator_less);
 			}
 			friend bool operator<=(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_less_equ);
+											   lhs._tree.value_operator_less_equ);
 			}
 			friend bool operator>(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_more);
+											   lhs._tree.value_operator_more);
 			}
 			friend bool operator>=(map const & lhs, map const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											   rhs.begin(), rhs.end(),
-											   lhs.value_operator_more_equ);
+											   lhs._tree.value_operator_more_equ);
 			}
 		private:
 			_tree_type _tree;

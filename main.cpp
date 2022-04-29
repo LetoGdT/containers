@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/28 18:27:04 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 00:16:04 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int main() {
 		for (i = x.begin() ; i != x.end() ; ++i)
 			std::cout << *i << std::endl;
 		NAMESPACE::vector<int> y(v.begin(), v.end());
-		std::cout << "Creating vector<int> z(v.begin(), v.end())" << std::endl;
+		std::cout << "Creating vector<int> y(v.begin(), v.end())" << std::endl;
 		for (i = y.begin() ; i != y.end() ; ++i)
 			std::cout << *i << std::endl;
 		std::cout << "v.assign(30, 52)" << std::endl;
@@ -203,6 +203,7 @@ int main() {
 		std::cout << "*i: " << *i << std::endl;
 		std::cout << "*j: " << *j << std::endl;
 		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i == j): " << (i == j) << std::endl;
 		std::cout << "(i < j): " << (i < j) << std::endl;
 		std::cout << "(i > j): " << (i > j) << std::endl;
 		std::cout << "(i <= j): " << (i <= j) << std::endl;
@@ -213,11 +214,12 @@ int main() {
 		std::cout << "i - j: " << i - j << std::endl;
 		i--;
 		std::cout << "i--" << std::endl;
-		std::cout << "i: v.begin() + 1" << std::endl;
+		std::cout << "i: v.begin()" << std::endl;
 		std::cout << "j: v.begin()" << std::endl;
 		std::cout << "*i: " << *i << std::endl;
 		std::cout << "*j: " << *j << std::endl;
 		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i == j): " << (i == j) << std::endl;
 		std::cout << "(i < j): " << (i < j) << std::endl;
 		std::cout << "(i > j): " << (i > j) << std::endl;
 		std::cout << "(i <= j): " << (i <= j) << std::endl;
@@ -231,6 +233,7 @@ int main() {
 		std::cout << "k: v.begin() + 1" << std::endl;
 		std::cout << "*k: " << *k << std::endl;
 		std::cout << "(k != i): " << (k != i) << std::endl;
+		std::cout << "(i == j): " << (i == j) << std::endl;
 		std::cout << "(k < i): " << (k < i) << std::endl;
 		std::cout << "(k > i): " << (k > i) << std::endl;
 		std::cout << "(k <= i): " << (k <= i) << std::endl;
@@ -240,6 +243,20 @@ int main() {
 		std::cout << "showing both normal and reverse iterators" << std::endl;
 		for (i = v.begin() ; i != v.end() && l != v.rend() ; ++i, ++l)
 			std::cout << *i << " " << *l << std::endl;
+
+		std::cout << "testing comparison operator for vector" << std::endl;
+		std::cout << "v == y: " << (v == y) << std::endl;
+		std::cout << "v != y: " << (v != y) << std::endl;
+		std::cout << "v <= y: " << (v <= y) << std::endl;
+		std::cout << "v < y: " << (v < y) << std::endl;
+		std::cout << "v >= y: " << (v >= y) << std::endl;
+		std::cout << "v > y: " << (v > y) << std::endl;
+		std::cout << "v == v: " << (v == v) << std::endl;
+		std::cout << "v != v: " << (v != v) << std::endl;
+		std::cout << "v <= v: " << (v <= v) << std::endl;
+		std::cout << "v < v: " << (v < v) << std::endl;
+		std::cout << "v >= v: " << (v >= v) << std::endl;
+		std::cout << "v > v: " << (v > v) << std::endl;
 	}
 
 	// Tests of map
@@ -256,16 +273,17 @@ int main() {
 		std::cout << "testing constructors" << std::endl;
 		std::cout << "showing m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "showing n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "showing o" << std::endl;
 		for (k = o.begin() ; k != o.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "showing p" << std::endl;
 		for (k = p.begin() ; k != p.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
+
 		std::cout << "testing ’at’ function" << std::endl;
 		try {
 			std::cout << "m.at(97): " << m.at(97) << std::endl;
@@ -290,6 +308,7 @@ int main() {
 		} catch (std::exception & e) {
 			std::cout << "unexpected exception raised" << std::endl;
 		}
+
 		std::cout << "testing empty, size and clear functions" << std::endl;
 		std::cout << "m.size(): " << m.size() << std::endl;
 		std::cout << "m.empty(): " << m.empty() << std::endl;
@@ -297,6 +316,7 @@ int main() {
 		m.clear();
 		std::cout << "m.size(): " << m.size() << std::endl;
 		std::cout << "m.empty(): " << m.empty() << std::endl;
+
 		std::cout << "testing insert functions" << std::endl;
 		NAMESPACE::pair<NAMESPACE::map<int, int>::iterator, bool> res = m.insert(NAMESPACE::make_pair(200, 200));
 		std::cout << "iterator: " << (*res.first).first << std::endl;
@@ -304,20 +324,21 @@ int main() {
 		std::cout << "testing insert(iterator, iterator)" << std::endl;
 		std::cout << "before" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		m.insert(n.begin(), n.end());
 		std::cout << "after" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).second << std::endl;
-		std::cout << "testing erase(iterator pos)" << std::endl;
-		m.erase(++m.begin());
+			std::cout << k->second << std::endl;
+
+		std::cout << "testing erase(m.begin())" << std::endl;
+		m.erase(m.begin());
 		std::cout << "after" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).second << std::endl;
+			std::cout << k->second << std::endl;
 		m.erase(--m.end());
 		std::cout << "testing erase(--m.end())" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).second << std::endl;
+			std::cout << k->second << std::endl;
 		std::cout << "m.size(): " << m.size()<< std::endl;
 		k = m.begin();
 		k++;
@@ -330,7 +351,7 @@ int main() {
 		std::cout << "testing erase(++m.begin(), k)" << std::endl;
 		m.erase(++m.begin(), k);
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).second << std::endl;
+			std::cout << k->second << std::endl;
 		m.clear();
 		n.clear();
 		for (int i = 0 ; i < 50 ; ++i) {
@@ -341,42 +362,180 @@ int main() {
 			int nb = rand() % 200;
 			n.insert(NAMESPACE::make_pair(nb, nb));
 		}
+		std::cout << "testing erase(m.begin(), m.begin())" << std::endl;
+		m.erase(m.begin(), m.begin());
+		for (k = m.begin() ; k != m.end() ; ++k)
+			std::cout << k->second << std::endl;
+		m.clear();
+		n.clear();
+		for (int i = 0 ; i < 50 ; ++i) {
+			int nb = rand() % 200;
+			m.insert(NAMESPACE::make_pair(nb, nb));
+		}
+		for (int i = 0 ; i < 50 ; ++i) {
+			int nb = rand() % 200;
+			n.insert(NAMESPACE::make_pair(nb, nb));
+		}
+		std::cout << "testing erase(m.begin(), ++m.begin())" << std::endl;
+		m.erase(m.begin(), ++m.begin());
+		for (k = m.begin() ; k != m.end() ; ++k)
+			std::cout << k->second << std::endl;
+
+		m.clear();
+		n.clear();
+		for (int i = 0 ; i < 50 ; ++i) {
+			int nb = rand() % 200;
+			m.insert(NAMESPACE::make_pair(nb, nb));
+		}
+		for (int i = 0 ; i < 50 ; ++i) {
+			int nb = rand() % 200;
+			n.insert(NAMESPACE::make_pair(nb, nb));
+		}
+		std::cout << "m and n clear and randomly filled" << std::endl;
 		std::cout << "testing m.swap(n)" << std::endl;
 		std::cout << "before" << std::endl;
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		m.swap(n);
 		std::cout << "after" << std::endl;
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "testing NAMESPACE::swap(m, n)" << std::endl;
 		std::cout << "before" << std::endl;
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		NAMESPACE::swap(m, n);
 		std::cout << "after" << std::endl;
 		std::cout << "m" << std::endl;
 		for (k = m.begin() ; k != m.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
 		std::cout << "n" << std::endl;
 		for (k = n.begin() ; k != n.end() ; ++k)
-			std::cout << (*k).first << std::endl;
+			std::cout << k->first << std::endl;
+
+		std::cout << "pair(42, 42) inserted into m" << std::endl;
+		m.insert(NAMESPACE::make_pair(42, 42));
+		std::cout << "m.count(42): " << m.count(42) << std::endl;
+		std::cout << "m.count(4242): " << m.count(4242) << std::endl;
+		std::cout << "(*m.find(42)).first: " << (*m.find(42)).first << std::endl;
+		std::cout << "m.find(4242) == m.end(): " << (m.find(4242) == m.end()) << std::endl;
+		NAMESPACE::pair<NAMESPACE::map<int, int>::iterator, NAMESPACE::map<int, int>::iterator> it = m.equal_range(5);
+		std::cout << "pair<iterator, iterator> it = m.equal_range(5)" << std::endl;
+		std::cout << "(*it.first).first: " << (*it.first).first << std::endl;
+		std::cout << "(*it.second).first: " << (*it.second).first << std::endl;
+		std::cout << "it = m.equal_range(42)" << std::endl;
+		it = m.equal_range(42);
+		std::cout << "(*it.first).first: " << (*it.first).first << std::endl;
+		std::cout << "(*it.second).first: " << (*it.second).first << std::endl;
+
+		NAMESPACE::map<int, int>::iterator i;
+		NAMESPACE::map<int, int>::const_iterator j;
+		i = m.begin();
+		j = m.begin();
+		i++;
+		std::cout << "testing iterators" << std::endl;
+		std::cout << "i: m.begin() + 1" << std::endl;
+		std::cout << "j: m.begin()" << std::endl;
+		std::cout << "i->first: " << i->first << std::endl;
+		std::cout << "j->first: " << j->first << std::endl;
+		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i == j): " << (i == j) << std::endl;
+		i--;
+		std::cout << "i--" << std::endl;
+		std::cout << "i: m.begin()" << std::endl;
+		std::cout << "j: m.begin()" << std::endl;
+		std::cout << "i->first: " << i->first << std::endl;
+		std::cout << "j->first: " << j->first << std::endl;
+		std::cout << "(i != j): " << (i != j) << std::endl;
+		std::cout << "(i == j): " << (i == j) << std::endl;
+		k = m.begin();
+		std::cout << "testing iterators" << std::endl;
+		std::cout << "k: m.begin()" << std::endl;
+		std::cout << "k->first: " << k->first << std::endl;
+		std::cout << "(k != i): " << (k != i) << std::endl;
+		std::cout << "(k == i): " << (k == i) << std::endl;
+		NAMESPACE::map<int, int>::reverse_iterator l = m.rbegin();
+		std::cout << "showing both normal and reverse iterators" << std::endl;
+		for (i = m.begin() ; i != m.end() && l != m.rend() ; ++i, ++l)
+			std::cout << i->first << " " << l->first << std::endl;
+
+//		std::cout << "testing comparison operator for map" << std::endl;
+//		std::cout << "m == n" << (m == n) << std::endl;
+//		std::cout << "m != n" << (m != n) << std::endl;
+//		std::cout << "m <= n" << (m <= n) << std::endl;
+//		std::cout << "m < n" << (m < n) << std::endl;
+//		std::cout << "m >= n" << (m >= n) << std::endl;
+//		std::cout << "m > n" << (m > n) << std::endl;
+//		std::cout << "m == m" << (m == m) << std::endl;
+//		std::cout << "m != m" << (m != m) << std::endl;
+//		std::cout << "m <= m" << (m <= m) << std::endl;
+//		std::cout << "m < m" << (m < m) << std::endl;
+//		std::cout << "m >= m" << (m >= m) << std::endl;
+//		std::cout << "m > m" << (m > m) << std::endl;
 	}
 
 	//Tests of stack
 	{
+		std::cout << std::endl;
+		std::cout << "testing stack" << std::endl;
+		NAMESPACE::stack<int> s;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		s.push(42);
+		std::cout << "s.empty(): " << s.empty() <<std::endl;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		std::cout << "s.push(42) " << std::endl;
+		std::cout << "s.top(): " << s.top() << std::endl;
+		s.push(43);
+		std::cout << "s.push(43) " << std::endl;
+		std::cout << "s.top(): " << s.top() << std::endl;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		std::cout << "s.empty(): " << s.empty() <<std::endl;
+		NAMESPACE::stack<int> t(s);
+		std::cout << "stack<int> t(s)" << std::endl;
+		NAMESPACE::stack<int> u = s;
+		std::cout << "stack<int> u = s" << std::endl;
+		std::cout << "t == s: " << (t == s) << std::endl;
+		std::cout << "t != s: " << (t != s) << std::endl;
+		std::cout << "t <= s: " << (t <= s) << std::endl;
+		std::cout << "t < s: " << (t < s) << std::endl;
+		std::cout << "t >= s: " << (t >= s) << std::endl;
+		std::cout << "t > s: " << (t > s) << std::endl;
+		s.pop();
+		std::cout << "s.pop()" << std::endl;
+		std::cout << "s.top(): " << s.top() << std::endl;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		std::cout << "t == s: " << (t == s) << std::endl;
+		std::cout << "t != s: " << (t != s) << std::endl;
+		std::cout << "t <= s: " << (t <= s) << std::endl;
+		std::cout << "t < s: " << (t < s) << std::endl;
+		std::cout << "t >= s: " << (t >= s) << std::endl;
+		std::cout << "t > s: " << (t > s) << std::endl;
+		std::cout << "s.push(2) " << std::endl;
+		std::cout << "s.top(): " << s.top() << std::endl;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		std::cout << "t == s: " << (t == s) << std::endl;
+		std::cout << "t != s: " << (t != s) << std::endl;
+		std::cout << "t <= s: " << (t <= s) << std::endl;
+		std::cout << "t < s: " << (t < s) << std::endl;
+		std::cout << "t >= s: " << (t >= s) << std::endl;
+		std::cout << "t > s: " << (t > s) << std::endl;
+		s.pop();
+		std::cout << "s.pop()" << std::endl;
+		std::cout << "s.size(): " << s.size() << std::endl;
+		std::cout << "s.empty(): " << s.empty() << std::endl;
+		std::cout << "u.top(): " << u.top() << std::endl;
 	}
 
 	return 0;

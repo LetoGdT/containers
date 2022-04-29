@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 23:27:53 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/29 23:25:38 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace ft{
 			typedef Category iterator_category;
 
 			MapIter(): _data(NULL), _tree(NULL), _is_end(false) {}
-			MapIter(_Node * data, _tree_type * const tree): _data(data),
+			MapIter(_Node * data, _tree_type const * tree): _data(data),
 														    _tree(tree),
 														    _is_end(false) {
 				if (!data || !tree)
@@ -77,20 +77,32 @@ namespace ft{
 				return iter;
 			}
 			MapIter & operator--() {
+				if (_is_end) {
+					_is_end = false;
+					return *this;
+				}
 				_Node* tmp = _tree->get_predecessor_iterator(_data);
 				if (tmp != NULL) {
 					_is_end = false;
 					_data = tmp;
 				}
+				else
+					_is_end = true;
 				return *this;
 			}
 			MapIter operator--(int) { 
 				MapIter iter(_data, _tree);
+				if (_is_end) {
+					_is_end = false;
+					return iter;
+				}
 				_Node* tmp = _tree->get_predecessor_iterator(_data);
 				if (tmp != NULL) {
 					_is_end = false;
 					_data = tmp;
 				}
+				else
+					_is_end = true;
 				return iter;
 			}
 
@@ -98,13 +110,13 @@ namespace ft{
 			pointer operator->() const { return &(_data->_content); }
 
 			_Node * get_data() const { return _data; }
-			_tree_type * get_tree() const { return _tree; }
+			const _tree_type * get_tree() const { return _tree; }
 			bool get_is_end() const { return _is_end; }
 
 		private:
-			_Node*		_data;
-			_tree_type*	_tree;
-			bool		_is_end;
+			_Node*				_data;
+			const _tree_type *	_tree;
+			bool				_is_end;
 	};
 
 	template<typename A,
@@ -116,7 +128,7 @@ namespace ft{
 			 typename Y1,
 			 typename Y2>
 	bool operator==(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
-		return lhs.get_data()->_content.first == rhs.get_data()->_content.first &&
+		return lhs.get_data() == rhs.get_data() && lhs.get_tree() == rhs.get_tree() &&
 				lhs.get_is_end() == rhs.get_is_end();
 	}
 	template<typename A,

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 18:26:08 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/29 23:45:14 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,32 +284,32 @@ namespace ft {
 
 			friend bool operator==(vector const & lhs,
 									vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_equ);
 			}
 			friend bool operator!=(vector const & lhs, vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_diff);
 			}
 			friend bool operator<(vector const & lhs, vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_less);
 			}
 			friend bool operator<=(vector const & lhs, vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_less_equ);
 			}
 			friend bool operator>(vector const & lhs, vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_more);
 			}
 			friend bool operator>=(vector const & lhs, vector const & rhs) {
-				return lexicographical_compare(lhs.begin(), lhs.end(),
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 												rhs.begin(), rhs.end(),
 												vector::_value_operator_more_equ);
 			}

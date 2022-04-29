@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 13:58:54 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/26 14:21:25 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 00:11:26 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ namespace ft {
 			typedef typename Container::reference reference;
 			typedef typename Container::const_reference const_reference;
 
-			stack(): c(Container()) {}
 			explicit stack(Container const & cont = Container()): c(cont) {}
-			stack(stack const & other) {
-				c = other;
-			}
+			stack(stack const & other): c(other.c) {}
 			stack& operator=(stack const & other) {
 				c = other;
 			}

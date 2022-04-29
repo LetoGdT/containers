@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/28 18:25:38 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/29 23:57:41 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,10 +200,58 @@ namespace ft {
 				}
 			}
 
+			void _exchange_neighboring_nodes(Node * A, Node * B) {
+				Node *parent;
+				Node *child;
+				
+				if (A->_left == B || A->_right == B) {
+					parent = A;
+					child = B;
+				}
+				else {
+					parent = B;
+					child = A;
+				}
+				Node tmp(*parent);
+
+				parent->_height = child->_height;
+				child->_height = tmp._height;
+				parent->_balance_factor = child->_balance_factor;
+				child->_balance_factor = tmp._balance_factor;
+
+				parent->_parent = child;
+				parent->_left = child->_left;
+				parent->_right = child->_right;
+				if (tmp._left == child) {
+					child->_left = parent;
+					child->_right = tmp._right;
+					child->_right->_parent = child;
+				}
+				else {
+					child->_left = tmp._left;
+					child->_left->_parent = child;
+					child->_right = parent;
+				}
+				child->_parent = tmp._parent;
+				if (tmp._parent->_left == parent)
+					tmp._parent->_left = child;
+				else
+					tmp._parent->_right = child;
+			}
+
 			void _exchange_nodes(Node * A, Node * B) {
 				if (A == NULL || B == NULL)
 					return ;
+				if (A->_parent == B || B->_parent == A) {
+					_exchange_neighboring_nodes(A, B);
+					return ;
+				}
 				Node tmp(*A);
+
+				A->_height = B->_height;
+				B->_height = tmp._height;
+				A->_balance_factor = B->_balance_factor;
+				B->_balance_factor = tmp._balance_factor;
 
 				// Setting A’s parent relationship
 				A->_parent = B->_parent;
@@ -312,7 +360,7 @@ namespace ft {
 				return res;
 			}
 
-			Node * _find(Node * node, _Key key) {
+			Node * _find(Node * node, _Key key) const {
 				if (node == NULL)
 					return NULL;
 				if (node->_content.first == key)
@@ -398,11 +446,8 @@ namespace ft {
 				return _find(_root, content.first);
 			}
 
-			Node * find(_Key key) {
-				Node * res = _find(_root, key);
-				if (res != NULL)
-					return res;
-				return NULL;
+			Node * find(_Key key) const {
+				return _find(_root, key);
 			}
 
 			void erase(_Key & key) {
@@ -430,7 +475,7 @@ namespace ft {
 				Node * res = _get_rightmost(current_node->_left);
 				if (res == NULL)
 					res = current_node->_parent;
-				while (res != NULL && compare_nodes(res, current_node))
+				while (res != NULL && !compare_nodes(res, current_node))
 					res = res->_parent;
 				return res;
 			}
@@ -442,11 +487,11 @@ namespace ft {
 				_root = NULL;
 			}
 
-			Node * get_leftmost() {
+			Node * get_leftmost() const {
 				return _get_leftmost(_root);
 			}
 
-			Node * get_rightmost() {
+			Node * get_rightmost() const {
 				return _get_rightmost(_root);
 			}
 
@@ -494,12 +539,12 @@ namespace ft {
 			Compare get_comp() const { return _comp; }
 			Compare get_value_comp() const { return _comp_values; }
 
-			inline bool value_operator_equ(const _value_type a, const _value_type b) { return a.first == b.first; }
-			inline bool value_operator_diff(const _value_type a, const _value_type b) { return a.first != b.first; }
-			inline bool value_operator_less(const _value_type a, const _value_type b) { return _comp(a.first, b.first); }
-			inline bool value_operator_less_equ(const _value_type a, const _value_type b) { return !_comp(b.first, a.first); }
-			inline bool value_operator_more(const _value_type a, const _value_type b) { return _comp(b.first, a.first); }
-			inline bool value_operator_more_equ(const _value_type a, const _value_type b) { return !_comp(a.first, b.first); }
+			inline static bool value_operator_equ(const _value_type a, const _value_type b) { return a.first == b.first; }
+			inline static bool value_operator_diff(const _value_type a, const _value_type b) { return a.first != b.first; }
+			inline bool value_operator_less(const _value_type a, const _value_type b) const { return _comp(a.first, b.first); }
+			inline bool value_operator_less_equ(const _value_type a, const _value_type b) const { return !_comp(b.first, a.first); }
+			inline bool value_operator_more(const _value_type a, const _value_type b) const { return _comp(b.first, a.first); }
+			inline bool value_operator_more_equ(const _value_type a, const _value_type b) const { return !_comp(a.first, b.first); }
 
 		private:
 			Node *_root;
