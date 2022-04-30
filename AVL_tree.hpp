@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 17:04:35 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:54:10 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,6 +427,7 @@ namespace ft {
 											  _comp(other._comp){}
 
 			AVL_tree & operator=(AVL_tree const & other) {
+				_destroy_node(_root);
 				_root = _copy_node(other._root, NULL);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
