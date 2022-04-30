@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/29 23:45:14 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 15:27:15 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,14 +284,15 @@ namespace ft {
 
 			friend bool operator==(vector const & lhs,
 									vector const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_equ);
+				if (lhs._size != rhs._size)
+					return false;
+				for (size_type i = 0 ; i < lhs._size ; ++i)
+					if (lhs[i] != rhs[i])
+						return false;
+				return true;
 			}
 			friend bool operator!=(vector const & lhs, vector const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_diff);
+				return !(lhs == rhs);
 			}
 			friend bool operator<(vector const & lhs, vector const & rhs) {
 				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
