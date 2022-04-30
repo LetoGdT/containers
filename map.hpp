@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 15:30:32 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 17:08:42 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ namespace ft {
 			friend bool operator==(map const & lhs, map const & rhs) {
 				if (lhs.size() != rhs.size())
 					return false;
-				for (iterator i = lhs.begin(), j = rhs.begin() ; i != lhs.end() ; ++i, ++j)
+				for (map::const_iterator i = lhs.begin(), j = rhs.begin() ; i != lhs.end() ; ++i, ++j)
 					if (*i != *j)
 						return false;
 				return true;
@@ -249,23 +249,16 @@ namespace ft {
 			}
 			friend bool operator<(map const & lhs, map const & rhs) {
 				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											   rhs.begin(), rhs.end(),
-											   lhs._tree.value_operator_less);
+											   rhs.begin(), rhs.end());
 			}
 			friend bool operator<=(map const & lhs, map const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											   rhs.begin(), rhs.end(),
-											   lhs._tree.value_operator_less_equ);
+				return !(rhs < lhs);
 			}
 			friend bool operator>(map const & lhs, map const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											   rhs.begin(), rhs.end(),
-											   lhs._tree.value_operator_more);
+				return rhs < lhs;
 			}
 			friend bool operator>=(map const & lhs, map const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											   rhs.begin(), rhs.end(),
-											   lhs._tree.value_operator_more_equ);
+				return !(lhs < rhs);
 			}
 		private:
 			_tree_type _tree;

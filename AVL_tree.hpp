@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/29 23:57:41 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 17:04:35 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -430,7 +430,6 @@ namespace ft {
 				_root = _copy_node(other._root, NULL);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
-				//_comp = other._comp;
 				return *this;
 			}
 
@@ -538,13 +537,6 @@ namespace ft {
 
 			Compare get_comp() const { return _comp; }
 			Compare get_value_comp() const { return _comp_values; }
-
-			inline static bool value_operator_equ(const _value_type a, const _value_type b) { return a.first == b.first; }
-			inline static bool value_operator_diff(const _value_type a, const _value_type b) { return a.first != b.first; }
-			inline bool value_operator_less(const _value_type a, const _value_type b) const { return _comp(a.first, b.first); }
-			inline bool value_operator_less_equ(const _value_type a, const _value_type b) const { return !_comp(b.first, a.first); }
-			inline bool value_operator_more(const _value_type a, const _value_type b) const { return _comp(b.first, a.first); }
-			inline bool value_operator_more_equ(const _value_type a, const _value_type b) const { return !_comp(a.first, b.first); }
 
 		private:
 			Node *_root;

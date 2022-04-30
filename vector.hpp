@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 15:27:15 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 16:58:48 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,23 +296,16 @@ namespace ft {
 			}
 			friend bool operator<(vector const & lhs, vector const & rhs) {
 				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_less);
+												rhs.begin(), rhs.end());
 			}
 			friend bool operator<=(vector const & lhs, vector const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_less_equ);
+				return !(rhs < lhs);
 			}
 			friend bool operator>(vector const & lhs, vector const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_more);
+				return rhs < lhs;
 			}
 			friend bool operator>=(vector const & lhs, vector const & rhs) {
-				return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-												rhs.begin(), rhs.end(),
-												vector::_value_operator_more_equ);
+				return !(lhs < rhs);
 			}
 
 		private:
@@ -336,12 +329,6 @@ namespace ft {
 				_size += count;
 				return iterator(_data + n);
 			}
-			inline static bool _value_operator_equ(const value_type a, const value_type b) { return a == b; }
-			inline static bool _value_operator_diff(const value_type a, const value_type b) { return a != b; }
-			inline static bool _value_operator_less(const value_type a, const value_type b) { return a < b; }
-			inline static bool _value_operator_less_equ(const value_type a, const value_type b) { return a <= b; }
-			inline static bool _value_operator_more(const value_type a, const value_type b) { return a > b; }
-			inline static bool _value_operator_more_equ(const value_type a, const value_type b) { return a >= b; }
 	};
 
 	template <typename T, typename Allocator>

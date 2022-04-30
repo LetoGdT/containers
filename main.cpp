@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 00:16:04 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 16:57:07 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -471,19 +471,19 @@ int main() {
 		for (i = m.begin() ; i != m.end() && l != m.rend() ; ++i, ++l)
 			std::cout << i->first << " " << l->first << std::endl;
 
-//		std::cout << "testing comparison operator for map" << std::endl;
-//		std::cout << "m == n" << (m == n) << std::endl;
-//		std::cout << "m != n" << (m != n) << std::endl;
-//		std::cout << "m <= n" << (m <= n) << std::endl;
-//		std::cout << "m < n" << (m < n) << std::endl;
-//		std::cout << "m >= n" << (m >= n) << std::endl;
-//		std::cout << "m > n" << (m > n) << std::endl;
-//		std::cout << "m == m" << (m == m) << std::endl;
-//		std::cout << "m != m" << (m != m) << std::endl;
-//		std::cout << "m <= m" << (m <= m) << std::endl;
-//		std::cout << "m < m" << (m < m) << std::endl;
-//		std::cout << "m >= m" << (m >= m) << std::endl;
-//		std::cout << "m > m" << (m > m) << std::endl;
+		std::cout << "testing comparison operator for map" << std::endl;
+		std::cout << "m == n" << (m == n) << std::endl;
+		std::cout << "m != n" << (m != n) << std::endl;
+		std::cout << "m <= n" << (m <= n) << std::endl;
+		std::cout << "m < n" << (m < n) << std::endl;
+		std::cout << "m >= n" << (m >= n) << std::endl;
+		std::cout << "m > n" << (m > n) << std::endl;
+		std::cout << "m == m" << (m == m) << std::endl;
+		std::cout << "m != m" << (m != m) << std::endl;
+		std::cout << "m <= m" << (m <= m) << std::endl;
+		std::cout << "m < m" << (m < m) << std::endl;
+		std::cout << "m >= m" << (m >= m) << std::endl;
+		std::cout << "m > m" << (m > m) << std::endl;
 	}
 
 	//Tests of stack
