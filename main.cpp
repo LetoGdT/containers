@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:40:46 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 16:57:07 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/04/30 21:10:06 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -536,6 +536,22 @@ int main() {
 		std::cout << "s.size(): " << s.size() << std::endl;
 		std::cout << "s.empty(): " << s.empty() << std::endl;
 		std::cout << "u.top(): " << u.top() << std::endl;
+	}
+
+	//Performance tests
+	{
+		NAMESPACE::map<int, int> m;
+		NAMESPACE::map<int, int>::iterator it;
+		NAMESPACE::vector<int> v;
+		NAMESPACE::vector<int>::iterator j;
+		for (int i = 0 ; i < 1000000 ; ++i)
+			v.push_back(rand());
+		for (j = v.begin() ; j != v.end() ; ++j)
+			m.insert(NAMESPACE::make_pair(*j, *j));
+		std::cout << (m.find(v[100]))->first << std::endl;
+		v.clear();
+		for (it = m.begin() ; it != m.end() ; ++it)
+			v.insert(v.begin(), (*it).first);
 	}
 
 	return 0;

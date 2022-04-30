@@ -22,12 +22,12 @@ RM			:=	rm -f
 all:			ft std test
 
 test:
-				@./ft > tmp_ft
-				@./std > tmp_std
-				@diff tmp_ft tmp_std
+				@echo "Running ft version"
+				time ./ft > tmp_ft
+				@echo "Running std version"
+				time ./std > tmp_std
+				@diff tmp_ft tmp_std && echo "No difference detected in the output!"
 				@rm tmp_ft tmp_std
-				time ./ft > /dev/null
-				time ./std > /dev/null
 
 ft:				$(SRCS) $(HDRS)
 				$(CXX) $(CFLAGS) $< -o ft
