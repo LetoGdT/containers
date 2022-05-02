@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 01:29:36 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 17:05:28 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 15:12:41 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,29 +112,6 @@ namespace ft{
 			_Node * get_data() const { return _data; }
 			const _tree_type * get_tree() const { return _tree; }
 			bool get_is_end() const { return _is_end; }
-	template<typename A,
-			 typename B,
-			 typename C,
-			 typename D,
-			 typename X1,
-			 typename X2,
-			 typename Y1,
-			 typename Y2>
-	friend bool operator==(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
-		return lhs._data == rhs._data && lhs._tree == rhs._tree &&
-				lhs._is_end == rhs._is_end;
-	}
-	template<typename A,
-			 typename B,
-			 typename C,
-			 typename D,
-			 typename X1,
-			 typename X2,
-			 typename Y1,
-			 typename Y2>
-	friend bool operator!=(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
-		return !(lhs==rhs);
-	}
 
 		private:
 			_Node*				_data;
@@ -142,6 +119,29 @@ namespace ft{
 			bool				_is_end;
 	};
 
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator==(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
+		return lhs.get_data() == rhs.get_data() && lhs.get_tree() == rhs.get_tree() &&
+				lhs.get_is_end() == rhs.get_is_end();
+	}
+	template<typename A,
+			 typename B,
+			 typename C,
+			 typename D,
+			 typename X1,
+			 typename X2,
+			 typename Y1,
+			 typename Y2>
+	bool operator!=(const MapIter<A, B, C, D, X1, Y1> & lhs, const MapIter<A, B, C, D, X2, Y2> & rhs) {
+		return !(lhs==rhs);
+	}
 }
 
 #endif

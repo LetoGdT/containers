@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 21:13:51 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/27 19:31:05 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:09:15 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,14 @@ namespace ft{
 
 			iterator_type base() const { return iterator_type(current); }
 
-			reference operator*() const { return *current; }
-			pointer operator->() const { return current.operator->(); }
+			reference operator*() const {
+				iterator_type tmp = current;
+				return *--tmp;
+			}
+			pointer operator->() const {
+				iterator_type tmp = current;
+				return &(*--tmp);
+			}
 
 			reverse_iterator& operator++() {
 				--current;
@@ -46,7 +52,7 @@ namespace ft{
 			reverse_iterator operator++(int) {
 				reverse_iterator it(current);
 				--current;
-				return *this;
+				return it;
 			}
 
 			reverse_iterator& operator--() {

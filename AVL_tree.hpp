@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/05/02 14:41:56 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 16:15:10 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,7 +428,7 @@ namespace ft {
 
 			AVL_tree & operator=(AVL_tree const & other) {
 				_destroy_node(_root);
-				_root = other._root;
+				_root = _copy_node(other._root, NULL);
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
 				return *this;
@@ -452,8 +452,9 @@ namespace ft {
 			}
 
 			Node * insert(_value_type const & content) {
-				if (_find(_root, content.first) != NULL)
-					return NULL;
+				Node * res = _find(_root, content.first);
+				if (res != NULL)
+					return res;
 				_root = _insert(_root, content);
 				_nb_of_nodes++;
 				return _find(_root, content.first);
@@ -551,6 +552,7 @@ namespace ft {
 
 			Compare get_comp() const { return _comp; }
 			Compare get_value_comp() const { return _comp_values; }
+			allocator_type get_alloc() const { return _alloc; }
 
 		private:
 			Node *_root;

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/05/02 14:42:10 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:16:11 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ namespace ft {
 			}
 			map(const map& other): _tree(other._tree) {}
 			map& operator=(map const & other) {
-				_tree = other.tree;
+				_tree = other._tree;
+				return *this;
 			}
 			~map() {}
 
@@ -84,7 +85,7 @@ namespace ft {
 			mapped_type & operator[](const key_type& key) {
 				typename _tree_type::Node * tmp = _tree.find(key);
 				if (tmp == NULL)
-					return _tree.insert(make_pair(key, mapped_type()))->_content.second;
+					return _tree.insert(ft::make_pair(key, mapped_type()))->_content.second;
 				return tmp->_content.second;
 			}
 
@@ -114,30 +115,28 @@ namespace ft {
 			reverse_iterator rbegin() {
 				_Node * node = _tree.get_rightmost();
 				reverse_iterator it(iterator(node, &_tree));
-				return it;
+				return --it;
 			}
 			reverse_iterator rend() {
 				_Node * node = _tree.get_leftmost();
 				reverse_iterator it(iterator(node, &_tree));
-				++it;
 				return it;
 			}
 			const_reverse_iterator rbegin() const {
 				_Node * node = _tree.get_rightmost();
 				const_reverse_iterator it(iterator(node, &_tree));
-				return it;
+				return --it;
 			}
 			const_reverse_iterator rend() const {
 				_Node * node = _tree.get_leftmost();
 				const_reverse_iterator it(iterator(node, &_tree));
-				++it;
 				return it;
 			}
 
 		//capacity
 			bool empty() const { return _tree.get_size() == 0; }
 			size_type size() const { return _tree.get_size(); }
-			size_type max_size() const { return std::numeric_limits<size_type>::max(); }
+			size_type max_size() const { return _tree.get_alloc().max_size(); }
 
 		//modifiers
 			void clear() {
@@ -145,9 +144,10 @@ namespace ft {
 			}
 
 			ft::pair<iterator, bool> insert(const value_type& value) {
+				bool is_present = _tree.find(value.first) != NULL;
 				_Node * node = _tree.insert(value);
 				iterator iter(node, &_tree);
-				return ft::make_pair(iter, node != NULL);
+				return ft::make_pair(iter, !is_present);
 			}
 			iterator insert(iterator hint, const value_type& value) {
 				(void)hint;

@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 14:25:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 16:58:48 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 17:13:46 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,15 +158,15 @@ namespace ft {
 			iterator end() { return iterator(&_data[_size]); }
 			const_iterator begin() const { return const_iterator(_data); }
 			const_iterator end() const { return const_iterator(&_data[_size]); }
-			reverse_iterator rbegin() { return reverse_iterator(iterator(&_data[_size - 1])); }
-			reverse_iterator rend() { return reverse_iterator(iterator(&_data[-1])); }
-			const_reverse_iterator rbegin() const { return const_reverse_iterator(iterator(&_data[_size - 1])); }
-			const_reverse_iterator rend() const { return const_reverse_iterator(iterator(&_data[-1])); }
+			reverse_iterator rbegin() { return reverse_iterator(iterator(&_data[_size])); }
+			reverse_iterator rend() { return reverse_iterator(iterator(_data)); }
+			const_reverse_iterator rbegin() const { return const_reverse_iterator(iterator(&_data[_size])); }
+			const_reverse_iterator rend() const { return const_reverse_iterator(iterator(_data)); }
 
 	//Capacity
 			bool empty() const { return _size == 0; }
 			size_type size() const { return _size; }
-			size_type max_size() const { return std::numeric_limits<size_type>::max(); }
+			size_type max_size() const { return _alloc.max_size(); }
 			void reserve(size_type new_cap) {
 				if (new_cap <= _capacity)
 					return ;
@@ -252,7 +252,7 @@ namespace ft {
 			void resize(size_type count, T value = T()) {
 				if (_size < count) {
 					size_type old_size = _size;
-					_makeEmptySpace(iterator(_data + _size - 1), count - _size);
+					_makeEmptySpace(iterator(_data + _size), count - _size);
 					for (size_type i = old_size ; i < count ; i++)
 						_alloc.construct(_data + i, value);
 				}
@@ -327,6 +327,8 @@ namespace ft {
 				if (n < _size)
 					memmove(_data + n + count, _data + n, (_size - n) * sizeof(value_type));
 				_size += count;
+				for (size_t i = 0 ; i < count ; ++i)
+					_alloc.construct(_data + n + i, value_type());
 				return iterator(_data + n);
 			}
 	};
