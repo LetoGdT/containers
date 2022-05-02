@@ -6,16 +6,16 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 13:58:54 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 00:11:26 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 21:26:04 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
-# include <deque>
+# include "vector.hpp"
 
 namespace ft {
-	template <class T, class Container = std::deque<T> >
+	template <class T, class Container = ft::vector<T> >
 	class stack {
 		public:
 			typedef Container container_type;
@@ -63,7 +63,7 @@ namespace ft {
 				return lhs.c >= rhs.c;
 			}
 
-		private:
+		protected:
 			Container c;
 	};
 }

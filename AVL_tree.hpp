@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/05/02 16:15:10 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 21:26:57 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,11 +363,12 @@ namespace ft {
 			Node * _find(Node * node, _Key key) const {
 				if (node == NULL)
 					return NULL;
-				if (node->_content.first == key)
-					return node;
 				if (_comp(node->_content.first, key))
 					return _find(node->_right, key);
-				return _find(node->_left, key);
+				else if(_comp(key, node->_right))
+					return _find(node->_left, key);
+				else
+					return node;
 			}
 
 			void _destroy_node(Node * node) {
