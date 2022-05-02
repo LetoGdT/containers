@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 15:57:18 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 20:54:10 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 14:41:56 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,10 +428,23 @@ namespace ft {
 
 			AVL_tree & operator=(AVL_tree const & other) {
 				_destroy_node(_root);
-				_root = _copy_node(other._root, NULL);
+				_root = other._root;
 				_alloc = other._alloc;
 				_nb_of_nodes = other._nb_of_nodes;
 				return *this;
+			}
+
+			void swap(AVL_tree& other) {
+				AVL_tree tmp;
+				tmp._root = other._root;
+				tmp._nb_of_nodes = other._nb_of_nodes;
+
+				other._root = _root;
+				other._nb_of_nodes = _nb_of_nodes;
+
+				_root = tmp._root;
+				_nb_of_nodes = tmp._nb_of_nodes;
+				tmp._root = NULL;
 			}
 
 			~AVL_tree() {

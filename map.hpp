@@ -6,7 +6,7 @@
 /*   By: lgaudet- <lgaudet-@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:04:09 by lgaudet-          #+#    #+#             */
-/*   Updated: 2022/04/30 17:08:42 by lgaudet-         ###   ########.fr       */
+/*   Updated: 2022/05/02 14:42:10 by lgaudet-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,9 +174,7 @@ namespace ft {
 				return old_size != _tree.get_size();
 			}
 			void swap(map& other) {
-				_tree_type tmp = _tree;
-				_tree = other._tree;
-				other._tree = tmp;
+				_tree.swap(other._tree);
 			}
 
 		//lookup
